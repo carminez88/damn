@@ -1,26 +1,12 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
+#include <functional>
 #include <zmq.hpp>
 
 #include "Packet.h"
 
 namespace damn {
-
-	template<typename T>
-	struct RefHolder
-	{
-		RefHolder(T& type)
-			: toHold( type )
-		{}
-
-		T& operator()() 
-		{
-			return toHold;
-		}
-
-		T& toHold;
-	};
 
 	class DAMNSocket
 	{
@@ -28,14 +14,13 @@ namespace damn {
 		using zmq_socket_ptr_t = std::unique_ptr<zmq_socket_t>;
 		using zmq_socket_type_t = zmq::socket_type;
 		using zmq_context_t = zmq::context_t;
-		using zmq_context_holder_t = RefHolder<zmq_context_t>;
+		using zmq_context_holder_t = std::reference_wrapper<zmq_context_t>;
 	public:
-		// TODO: Move ctor and otor
 
 		DAMNSocket(const DAMNSocket&) = delete;
 		DAMNSocket& operator=(const DAMNSocket&) = delete;
 
-		[[nodiscard]] bool init(zmq_context_holder_t& context, zmq_socket_type_t type);
+		[[nodiscard]] bool init(zmq_context_holder_t context, zmq_socket_type_t type);
 
 		[[nodiscard]] std::optional<Packet> read();
 

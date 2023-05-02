@@ -12,6 +12,7 @@ class DAMNListener
 {
 	using socket_t = DAMNSocket;
 	using socket_ptr_t = std::unique_ptr<socket_t>;
+	using zmq_context_t = std::reference_wrapper<zmq::context_t>;
 public:
 	explicit DAMNListener(zmq::context_t& context);
 
@@ -25,7 +26,7 @@ public Q_SLOTS:
 	
 private:
 	bool m_isRunning { true };
-	RefHolder<zmq::context_t> m_context;
+	zmq_context_t m_context;
 	socket_ptr_t m_socket { nullptr };
 };
 
