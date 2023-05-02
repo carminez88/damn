@@ -1,37 +1,34 @@
-#pragma once
+#ifndef DAMNLISTENER_H
+#define DAMNLISTENER_H
+
 #include <qobjectdefs.h>
-#include <string>
+
+#include "Packet.h"
+#include "Socket.h" // TODO: pimplare
 
 namespace damn {
 
-	enum class damn_packet_type : uint8_t
-	{
-		undefined = 0,
-		registration,
-		heartbeat
-	};
-
-	struct damn_packet_t { virtual ~damn_packet_t() = default; };
-
-	struct damn_registration_packet_t : public damn_packet_t
-	{
-		std::string source;
-		std::string userID;
-		std::string details;
-		std::time_t timestamp;
-		const auto packetType{ damn_packet_type::registration };
-	};
-
 class DAMNListener
 {
+	using socket_t = DAMNSocket;
+	using socket_ptr_t = std::unique_ptr<socket_t>;
 public:
-	explicit DAMNListener() = default;
+	explicit DAMNListener(zmq::context_t& context);
+
+	void run();
 
 Q_SIGNALS:
-	void notifyRegistrationPacket(damn_registration_packet_t);
-	
+	void notifyPacket(Packet);
+
+public Q_SLOTS:
+	void on_updateRunningStatus(bool a_isRunning);
 	
 private:
+	bool m_isRunning { true };
+	RefHolder<zmq::context_t> m_context;
+	socket_ptr_t m_socket { nullptr };
 };
 
 } // namespace damn
+
+#endif // DAMNLISTENER_H
