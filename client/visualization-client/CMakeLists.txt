@@ -27,6 +27,12 @@ set(PROJECT_SOURCES
 		src/Listener.cpp
         src/main.cpp
         src/qml.qrc
+		src/IPacket.h
+		src/Packet.h
+		src/Packet.cpp
+		src/PacketType.h
+		src/Socket.h
+		src/Socket.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -55,7 +61,9 @@ endif()
 target_link_libraries(VisualizationClient
   PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
   
-target_include_directories(VisualizationClient PUBLIC src)
+target_include_directories(VisualizationClient PRIVATE ${Qt5Core_INCLUDE_DIRS})
+target_include_directories(VisualizationClient PRIVATE src)
+target_include_directories(VisualizationClient PRIVATE ${ZeroMQ_INCLUDE_DIR}  )
 
 set_target_properties(VisualizationClient PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
