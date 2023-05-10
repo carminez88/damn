@@ -1,7 +1,7 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Layouts 1.15 // ColumnLayout
-import QtQuick.Controls 2.15 // Buttons
+import QtQuick 2.12
+import QtQuick.Window 2.12
+import QtQuick.Layouts 1.10 // ColumnLayout
+import QtQuick.Controls 2.12 // Buttons
 import com.cppeverything.devicemonitor 1.0
 
 Window {

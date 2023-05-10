@@ -1,6 +1,6 @@
-import QtQuick 2.15
-import QtCharts 2.0
-import QtQuick.Window 2.15
+import QtQuick 2.12
+//import QtCharts 2.0
+import QtQuick.Window 2.12
 import com.cppeverything.devicemonitor 1.0
 
 Rectangle {

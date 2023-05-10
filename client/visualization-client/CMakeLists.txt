@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.14)
 
 project(DeviceActivityMonitor-VisualizationClient VERSION 0.1 LANGUAGES CXX)
 
+add_compile_options(/MTd)
+
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -13,6 +15,13 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick)
 find_package(ZeroMQ 4.3.4 REQUIRED)
 
+find_package(Protobuf REQUIRED)
+include_directories(${Protobuf_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS src/packet.proto)
+#protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS EXPORT_MACRO DLL_EXPORT packet.proto)
+#protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS DESCRIPTORS PROTO_DESCS packet.proto)
+
 set(PROJECT_SOURCES
         src/Controller.h
         src/Controller.cpp
@@ -23,16 +32,19 @@ set(PROJECT_SOURCES
         src/DeviceFilterProxyModel.h
         src/DeviceFilterProxyModel.cpp
         src/EnumConverter.h
-		src/Listener.h
-		src/Listener.cpp
+        src/Listener.h
+        src/Listener.cpp
         src/main.cpp
         src/qml.qrc
-		src/IPacket.h
-		src/Packet.h
-		src/Packet.cpp
-		src/PacketType.h
-		src/Socket.h
-		src/Socket.cpp
+        src/IPacket.h
+        src/Packet.h
+        src/Packet.cpp
+        src/PacketType.h
+        src/Socket.h
+        src/Socket.cpp
+        src/ZMQUtils.h
+        ${PROTO_HDRS}
+        ${PROTO_SRCS}
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -58,12 +70,17 @@ else()
     endif()
 endif()
 
+add_dependencies(VisualizationClient spdlog)
+
 target_link_libraries(VisualizationClient
   PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
-  
+
+target_link_libraries(VisualizationClient PRIVATE libzmq ${Protobuf_LIBRARIES})
+
 target_include_directories(VisualizationClient PRIVATE ${Qt5Core_INCLUDE_DIRS})
 target_include_directories(VisualizationClient PRIVATE src)
 target_include_directories(VisualizationClient PRIVATE ${ZeroMQ_INCLUDE_DIR}  )
+target_include_directories(VisualizationClient PUBLIC ${STAGING_DIR}/include/ ) # spdlog
 
 set_target_properties(VisualizationClient PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
