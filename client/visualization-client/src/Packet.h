@@ -5,7 +5,7 @@
 #include <ctime>
 #include <optional>
 
-#include "packet.pb.h"
+#include "proto/packet.pb.h"
 //#include "IPacket.h"
 //#include "PacketType.h"
 

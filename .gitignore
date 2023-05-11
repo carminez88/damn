@@ -33,3 +33,5 @@
 
 # cmake local configuration
 *.txt.user
+build/*
+third_party/*

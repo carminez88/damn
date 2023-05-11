@@ -1,0 +1,20 @@
+syntax = "proto2";
+
+package damn;
+
+
+message Packet {
+
+    enum PacketType {
+		UNDEFINED = 0;
+		REGISTRATION = 1;
+		HEARTBEAT = 2;
+    }
+	
+	required string source = 1;
+	required int64 timestamp = 2;
+	required PacketType type = 3 [default = UNDEFINED];
+	optional string userID = 4;
+	optional string details = 5;
+	
+}

@@ -1,5 +1,6 @@
 #include <QCoreApplication>
-#include "spdlog/spdlog.h"
+
+#include <spdlog/spdlog.h>
 #include "Listener.h"
 
 namespace damn 

@@ -14,13 +14,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick)
 find_package(ZeroMQ 4.3.4 REQUIRED)
-
+find_package(spdlog REQUIRED)
 find_package(Protobuf REQUIRED)
-include_directories(${Protobuf_INCLUDE_DIRS})
+find_package(cppzmq 4.9.0 REQUIRED)
+find_package(fmt REQUIRED)
+
+add_subdirectory(proto)
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS src/packet.proto)
-#protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS EXPORT_MACRO DLL_EXPORT packet.proto)
-#protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS DESCRIPTORS PROTO_DESCS packet.proto)
+include_directories(${Protobuf_INCLUDE_DIRS})
 
 set(PROJECT_SOURCES
         src/Controller.h
@@ -32,8 +34,8 @@ set(PROJECT_SOURCES
         src/DeviceFilterProxyModel.h
         src/DeviceFilterProxyModel.cpp
         src/EnumConverter.h
-        src/Listener.h
-        src/Listener.cpp
+        #src/Listener.h
+        #src/Listener.cpp
         src/main.cpp
         src/qml.qrc
         src/IPacket.h
@@ -43,8 +45,6 @@ set(PROJECT_SOURCES
         src/Socket.h
         src/Socket.cpp
         src/ZMQUtils.h
-        ${PROTO_HDRS}
-        ${PROTO_SRCS}
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -70,17 +70,19 @@ else()
     endif()
 endif()
 
-add_dependencies(VisualizationClient spdlog)
+target_link_libraries(VisualizationClient PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+#target_link_libraries(VisualizationClient PRIVATE ${ZeroMQ_LIBRARIES}  ${spdlog_LIBRARIES} ${fmt_LIBRARIES} ${cppzmq_LIBRARIES})
+target_link_libraries(VisualizationClient PRIVATE ${protobuf_LIBRARIES} proto)
 
-target_link_libraries(VisualizationClient
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+#target_compile_definitions(VisualizationClient PRIVATE ${spdlog_DEFINITIONS} ${fmt_DEFINITIONS})
+target_compile_definitions(VisualizationClient PRIVATE ${protobuf_DEFINITIONS})
 
-target_link_libraries(VisualizationClient PRIVATE libzmq ${Protobuf_LIBRARIES})
-
-target_include_directories(VisualizationClient PRIVATE ${Qt5Core_INCLUDE_DIRS})
-target_include_directories(VisualizationClient PRIVATE src)
-target_include_directories(VisualizationClient PRIVATE ${ZeroMQ_INCLUDE_DIR}  )
-target_include_directories(VisualizationClient PUBLIC ${STAGING_DIR}/include/ ) # spdlog
+target_include_directories(VisualizationClient PRIVATE ${Qt5Core_INCLUDE_DIRS}  )
+target_include_directories(VisualizationClient PRIVATE ${ZeroMQ_INCLUDE_DIR}    )
+#target_include_directories(VisualizationClient PRIVATE ${spdlog_INCLUDE_DIRS}   )
+target_include_directories(VisualizationClient PRIVATE ${cppzmq_INCLUDE_DIRS}   )
+target_include_directories(VisualizationClient PRIVATE ${protobuf_INCLUDE_DIRS} )
+#target_include_directories(VisualizationClient PRIVATE ${fmt_INCLUDE_DIRS}      )
 
 set_target_properties(VisualizationClient PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

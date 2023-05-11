@@ -1,4 +1,4 @@
-#include "spdlog/spdlog.h"
+//#include "spdlog/spdlog.h"
 #include "Socket.h"
 
 namespace damn {
@@ -15,7 +15,7 @@ namespace damn {
             return true;
 
         } catch (const std::exception& e) {
-            spdlog::error( "Error while creating 0MQ socket: {}", e.what() );
+            //spdlog::error( "Error while creating 0MQ socket: {}", e.what() );
 		}
 
         return false;
@@ -35,11 +35,11 @@ namespace damn {
                 if ( parseSuccessfull )
                     return std::move( pkt );
 
-                spdlog::error( "Error while deserializing 0MQ message!" );
+                //spdlog::error( "Error while deserializing 0MQ message!" );
 			}
 
         } catch (const std::exception& e) {
-            spdlog::error( "Error while reading from 0MQ socket: {}", e.what() );
+            //spdlog::error( "Error while reading from 0MQ socket: {}", e.what() );
 		}
 
 		return std::nullopt;
