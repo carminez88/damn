@@ -2,7 +2,22 @@ cmake_minimum_required(VERSION 3.14)
 
 project(DeviceActivityMonitor-VisualizationClient VERSION 0.1 LANGUAGES CXX)
 
-add_compile_options(/MTd)
+#add_compile_options(/MTd)
+if(MSVC)
+    add_compile_options (/permissive-)
+    add_compile_options (/DNOGDI)
+    add_compile_options (/DNOMINMAX)
+    add_compile_options (/MP12) # FIXME: hardcoded 12
+    add_compile_options ("$<IF:$<CONFIG:Debug>,/MDd,/MD>")
+    add_compile_options (/Zc:__cplusplus)
+    add_compile_options ("$<IF:$<CONFIG:Debug>,/Od,/O2>")
+    add_compile_options (/EHsc)
+    add_compile_options (/nologo)
+    #add_compile_options (/W4)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-W -Wall -pipe -fPIC -Wextra -msse -msse2 -msse3 -mssse3 -msahf $<IF:$<CONFIG:Debug>,-O0,-O3> $<IF:$<CONFIG:Debug>,-g3,-g0>)
+    add_compile_options("$<$<CONFIG:DEBUG>:-Wno-system-headers>")
+endif()
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -72,10 +87,12 @@ endif()
 
 target_link_libraries(VisualizationClient PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
 #target_link_libraries(VisualizationClient PRIVATE ${ZeroMQ_LIBRARIES}  ${spdlog_LIBRARIES} ${fmt_LIBRARIES} ${cppzmq_LIBRARIES})
-target_link_libraries(VisualizationClient PRIVATE ${protobuf_LIBRARIES} proto)
+target_link_libraries(VisualizationClient PRIVATE ${cppzmq_LIBRARIES} ${ZeroMQ_LIBRARIES} ${protobuf_LIBRARIES} proto)
 
 #target_compile_definitions(VisualizationClient PRIVATE ${spdlog_DEFINITIONS} ${fmt_DEFINITIONS})
 target_compile_definitions(VisualizationClient PRIVATE ${protobuf_DEFINITIONS})
+target_compile_definitions(VisualizationClient PRIVATE ${ZeroMQ_DEFINITIONS})
+target_compile_definitions(VisualizationClient PRIVATE ${cppzmq_DEFINITIONS})
 
 target_include_directories(VisualizationClient PRIVATE ${Qt5Core_INCLUDE_DIRS}  )
 target_include_directories(VisualizationClient PRIVATE ${ZeroMQ_INCLUDE_DIR}    )
