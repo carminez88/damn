@@ -20,11 +20,10 @@ public:
 
     void run();
 
+    void on_updateRunningStatus(bool isRunning);
+
 Q_SIGNALS:
     void notifyPacket(Packet);
-
-public Q_SLOTS:
-    void on_updateRunningStatus(bool a_isRunning);
 
 private:
     bool m_isRunning { true };

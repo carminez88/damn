@@ -49,13 +49,13 @@ set(PROJECT_SOURCES
         src/DeviceFilterProxyModel.h
         src/DeviceFilterProxyModel.cpp
         src/EnumConverter.h
-        #src/Listener.h
-        #src/Listener.cpp
+        src/Listener.h
+        src/Listener.cpp
         src/main.cpp
         src/qml.qrc
-        src/IPacket.h
+        #src/IPacket.h
         src/Packet.h
-        src/Packet.cpp
+        #src/Packet.cpp
         src/PacketType.h
         src/Socket.h
         src/Socket.cpp
@@ -86,20 +86,20 @@ else()
 endif()
 
 target_link_libraries(VisualizationClient PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
-#target_link_libraries(VisualizationClient PRIVATE ${ZeroMQ_LIBRARIES}  ${spdlog_LIBRARIES} ${fmt_LIBRARIES} ${cppzmq_LIBRARIES})
+target_link_libraries(VisualizationClient PRIVATE ${ZeroMQ_LIBRARIES}  ${spdlog_LIBRARIES} ${fmt_LIBRARIES} ${cppzmq_LIBRARIES})
 target_link_libraries(VisualizationClient PRIVATE ${cppzmq_LIBRARIES} ${ZeroMQ_LIBRARIES} ${protobuf_LIBRARIES} proto)
 
-#target_compile_definitions(VisualizationClient PRIVATE ${spdlog_DEFINITIONS} ${fmt_DEFINITIONS})
+target_compile_definitions(VisualizationClient PRIVATE ${spdlog_DEFINITIONS} ${fmt_DEFINITIONS})
 target_compile_definitions(VisualizationClient PRIVATE ${protobuf_DEFINITIONS})
 target_compile_definitions(VisualizationClient PRIVATE ${ZeroMQ_DEFINITIONS})
 target_compile_definitions(VisualizationClient PRIVATE ${cppzmq_DEFINITIONS})
 
 target_include_directories(VisualizationClient PRIVATE ${Qt5Core_INCLUDE_DIRS}  )
 target_include_directories(VisualizationClient PRIVATE ${ZeroMQ_INCLUDE_DIR}    )
-#target_include_directories(VisualizationClient PRIVATE ${spdlog_INCLUDE_DIRS}   )
+target_include_directories(VisualizationClient PRIVATE ${spdlog_INCLUDE_DIRS}   )
 target_include_directories(VisualizationClient PRIVATE ${cppzmq_INCLUDE_DIRS}   )
 target_include_directories(VisualizationClient PRIVATE ${protobuf_INCLUDE_DIRS} )
-#target_include_directories(VisualizationClient PRIVATE ${fmt_INCLUDE_DIRS}      )
+target_include_directories(VisualizationClient PRIVATE ${fmt_INCLUDE_DIRS}      )
 
 set_target_properties(VisualizationClient PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

@@ -7,9 +7,9 @@ namespace damn {
 
 	enum class PacketType : uint8_t
 	{
-		undefined = 0,
-		registration,
-		heartbeat
+		Undefined = 0,
+		Registration,
+		Heartbeat
 	};
 
 } // namespace damn

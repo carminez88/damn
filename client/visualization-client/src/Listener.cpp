@@ -1,5 +1,4 @@
 #include <QCoreApplication>
-
 #include <spdlog/spdlog.h>
 #include "Listener.h"
 
@@ -14,9 +13,10 @@ void DAMNListener::run()
 {
     // Create ZMQ Socket on a SUB channel
     // Many publishers on different endpoints, one single subscriber
-    m_socket = std::make_unique<socket_t>();
+    m_socket = std::make_unique<socket_t>( "tcp://localhost:5556" );
 
-    if ( not m_socket->init( m_context, zmq::socket_type::sub ) ) {
+    // FIXME: hardcoded address
+    if ( not m_socket->init<ConnectPolicy>( m_context, zmq::socket_type::sub ) ) {
         spdlog::error( "Failed to initialize socket!" );
         return;
     }
@@ -26,7 +26,7 @@ void DAMNListener::run()
 
         // Listen on ZMQ socket with a timeout of X seconds
         // If package is found, emit it
-        if ( std::optional<Packet> pkt = m_socket->read(); pkt.has_value() )
+        if ( auto pkt = m_socket->read(); pkt.has_value() )
             Q_EMIT notifyPacket( pkt.value() );
 
         // Process events
@@ -35,9 +35,9 @@ void DAMNListener::run()
     }
 }
 
-void DAMNListener::on_updateRunningStatus(bool a_isRunning)
+void DAMNListener::on_updateRunningStatus(bool isRunning)
 {
-    m_isRunning = a_isRunning;
+    m_isRunning = isRunning;
 }
 
 } // namespace damn
