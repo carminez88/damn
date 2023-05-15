@@ -37,9 +37,15 @@ find_package(fmt REQUIRED)
 add_subdirectory(proto)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR_DIR}/proto)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR_DIR}/src/Dummy)
 include_directories(${Protobuf_INCLUDE_DIRS})
 
 set(PROJECT_SOURCES
+		src/Dummy/DummyDevicePublisher.h
+		src/Dummy/DummyDevicePublisher.cpp
         src/Controller.h
         src/Controller.cpp
         src/DeviceData.h
@@ -56,7 +62,7 @@ set(PROJECT_SOURCES
         #src/IPacket.h
         src/Packet.h
         #src/Packet.cpp
-        src/PacketType.h
+        #src/PacketType.h
         src/Socket.h
         src/Socket.cpp
         src/ZMQUtils.h

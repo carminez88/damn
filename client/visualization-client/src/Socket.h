@@ -39,7 +39,12 @@ public:
         try {
 
             m_zsocket = std::make_unique<zmq_socket_t>(context.get(), type);
-            m_zsocket->set(zmq::sockopt::rcvtimeo, k_timeout);
+
+            // FIXME: porcheria
+            if (type == zmq::socket_type::sub) {
+                m_zsocket->set(zmq::sockopt::rcvtimeo, k_timeout);
+                m_zsocket->set(zmq::sockopt::subscribe, "" );
+            }
 
             InitPolicy::apply( *m_zsocket.get(), m_address );
 
@@ -54,6 +59,10 @@ public:
     }
 
     [[nodiscard]] std::optional<Packet> read();
+
+    [[nodiscard]] bool write(Packet& packet);
+
+    [[nodiscard]] bool write(const std::string& buffer);
 
 private:
     std::string m_address { "" };

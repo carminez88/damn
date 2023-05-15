@@ -13,25 +13,34 @@ void DAMNListener::run()
 {
     // Create ZMQ Socket on a SUB channel
     // Many publishers on different endpoints, one single subscriber
-    m_socket = std::make_unique<socket_t>( "tcp://localhost:5556" );
-
     // FIXME: hardcoded address
+    m_socket = std::make_unique<socket_t>( "tcp://127.0.0.1:5555" );
+
     if ( not m_socket->init<ConnectPolicy>( m_context, zmq::socket_type::sub ) ) {
         spdlog::error( "Failed to initialize socket!" );
         return;
     }
+    else
+        spdlog::info( "Socket initialized!" );
 
     // Main loop
     while ( m_isRunning ) {
 
         // Listen on ZMQ socket with a timeout of X seconds
         // If package is found, emit it
-        if ( auto pkt = m_socket->read(); pkt.has_value() )
-            Q_EMIT notifyPacket( pkt.value() );
+        spdlog::info("Trying to read something...");
+
+        if ( auto pktRet = m_socket->read(); pktRet.has_value() ) {
+
+            auto packet = std::move( pktRet.value() );
+
+            spdlog::info( "Received packet {}", packet.DebugString() );
+            
+            Q_EMIT notifyPacket( std::move( packet ) );
+        }
 
         // Process events
         QCoreApplication::processEvents();
-
     }
 }
 

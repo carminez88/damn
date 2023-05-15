@@ -31,4 +31,28 @@ std::optional<Packet> DAMNSocket::read()
 	return std::nullopt;
 }
 
+bool DAMNSocket::write(Packet& packet)
+{
+    std::string buffer;
+
+    if ( not packet.SerializeToString( &buffer ) ) {
+        spdlog::error( "Cannot serialize message!" );
+        return false;
+    }
+
+    return write( buffer );
+}
+
+bool DAMNSocket::write(const std::string& buffer)
+{
+    const auto dataLength = buffer.length();
+
+    zmq::message_t zmsg( dataLength );
+
+    std::memcpy( zmsg.data(), buffer.data(), dataLength );
+    auto sendRet = m_zsocket->send( std::move( zmsg ), zmq::send_flags::dontwait );
+
+    return sendRet.value_or( 0 ) == buffer.size();
+}
+
 } // namespace damn
