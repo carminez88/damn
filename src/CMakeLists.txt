@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(DeviceMonitor VERSION 0.1 LANGUAGES CXX)
+project(Damn VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -27,32 +27,32 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(DeviceMonitor
+    qt_add_executable(Damn
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 # Define target properties for Android with Qt 6 as:
-#    set_property(TARGET DeviceMonitor APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+#    set_property(TARGET Damn APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
     if(ANDROID)
-        add_library(DeviceMonitor SHARED
+        add_library(Damn SHARED
             ${PROJECT_SOURCES}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
-        add_executable(DeviceMonitor
+        add_executable(Damn
           ${PROJECT_SOURCES}
         )
     endif()
 endif()
 
-target_link_libraries(DeviceMonitor
+target_link_libraries(Damn
   PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
 
-set_target_properties(DeviceMonitor PROPERTIES
+set_target_properties(Damn PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -60,11 +60,11 @@ set_target_properties(DeviceMonitor PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-install(TARGETS DeviceMonitor
+install(TARGETS Damn
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_import_qml_plugins(DeviceMonitor)
-    qt_finalize_executable(DeviceMonitor)
+    qt_import_qml_plugins(Damn)
+    qt_finalize_executable(Damn)
 endif()

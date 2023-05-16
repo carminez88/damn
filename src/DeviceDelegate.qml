@@ -1,5 +1,4 @@
 import QtQuick 2.15
-import QtCharts 2.0
 import QtQuick.Window 2.15
 import com.cppeverything.devicemonitor 1.0
 
