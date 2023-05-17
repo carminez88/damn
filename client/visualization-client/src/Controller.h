@@ -18,8 +18,7 @@ public:
     void set_model(std::shared_ptr<DeviceListModel> const& model);
 
     [[nodiscard]] std::shared_ptr<DeviceFilterProxyModel> filter_model() const;
-    void
-        set_filter_model(const std::shared_ptr<DeviceFilterProxyModel>& filter_model);
+    void set_filter_model(const std::shared_ptr<DeviceFilterProxyModel>& filter_model);
 
     /// \brief handle_device_data includes the new incoming information contained
     /// \a deviceData to the underlying model \param deviceData information about

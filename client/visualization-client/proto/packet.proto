@@ -9,6 +9,7 @@ message Packet {
 		UNDEFINED = 0;
 		REGISTRATION = 1;
 		HEARTBEAT = 2;
+		DISCONNECTION = 3;
     }
 	
 	required string source = 1;

@@ -1,9 +1,18 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <future>
+#include <thread>
+#include <chrono>
+using namespace std::chrono_literals;
 
 #include "Controller.h"
+#include "Listener.h"
+#include "dummy/DummyDevicePublisher.h"
 #include "QDate"
+
+#define DAMN_START_JTHREAD_RUNNER( jthreadVar, runner ) std::jthread jthreadVar( [ &runner ](std::stop_token stoken) { runner.run( stoken ); } );
+#define DAMN_STOP_JTHREAD_RUNNER( jthreadVar ) jthreadVar.request_stop();
 
 int main(int argc, char *argv[])
 {
@@ -45,15 +54,28 @@ int main(int argc, char *argv[])
 
     // Fill model with data
     Controller::instance()->model()->add_device(
-        {"X24Abc001", "PC Carmine", "Carmine", DeviceData::DeviceStatus::Online});
-    Controller::instance()->model()->add_device(
-        {"X24Abc002", "PC Fabrizio", "", DeviceData::DeviceStatus::Connecting});
-    Controller::instance()->model()->add_device(
-        {"X24Abc003", "PC Lily", "", DeviceData::DeviceStatus::Undefined});
-    Controller::instance()->model()->add_device(
-        {"X24Abc004", "PC 3", "Lily", DeviceData::DeviceStatus::Online});
-    Controller::instance()->model()->add_device(
-        {"X24Abc005", "PC 4", "", DeviceData::DeviceStatus::Online});
+        {"X24Abc003", "PC Lily", "", DeviceData::DeviceStatus::Online });
 
-    return app.exec();
+    // Create Objects
+    zmq::context_t ctx{ 1 };
+
+    damn::DAMNListener listener{ ctx };
+    damn::DummyDevicePublisher dummy{ ctx };
+
+    QObject::connect( &listener,              &damn::DAMNListener::notifyDevice, 
+                      Controller::instance(), &Controller::register_device_information, Qt::QueuedConnection );
+
+    //std::jthread listenerThread( [ &listener ](std::stop_token stoken) { listener.run( stoken ); } );
+    DAMN_START_JTHREAD_RUNNER( listenerThread, listener )
+
+    std::this_thread::sleep_for(2s);
+
+    DAMN_START_JTHREAD_RUNNER( dummyThread, dummy )
+
+    auto ret = app.exec();
+
+    DAMN_STOP_JTHREAD_RUNNER( listenerThread )
+    DAMN_STOP_JTHREAD_RUNNER( dummyThread )
+
+    return ret;
 }

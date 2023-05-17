@@ -1,10 +1,11 @@
 #pragma once
 
 #include "../Socket.h" 
+#include "../IStoppableRunner.h"
 
 namespace damn {
 
-class DummyDevicePublisher
+class DummyDevicePublisher : public IStoppableRunner
 {
 	using socket_t = DAMNSocket;
 	using socket_ptr_t = std::unique_ptr<socket_t>;
@@ -12,7 +13,7 @@ class DummyDevicePublisher
 public:
 	DummyDevicePublisher(zmq::context_t& context);
 
-	void run();
+	void run(std::stop_token stoken) override;
 
 private:
 	zmq_context_holder_t m_context;

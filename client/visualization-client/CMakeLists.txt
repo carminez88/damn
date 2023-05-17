@@ -55,6 +55,7 @@ set(PROJECT_SOURCES
         src/DeviceFilterProxyModel.h
         src/DeviceFilterProxyModel.cpp
         src/EnumConverter.h
+		src/IStoppableRunner.h
         src/Listener.h
         src/Listener.cpp
         src/main.cpp
