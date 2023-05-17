@@ -8,7 +8,7 @@ Window {
     width: 200
     height: 480
     visible: true
-    title: qsTr("DeviceMonitor")
+    title: qsTr("Damn")
 
     ColumnLayout {
         spacing: 5
