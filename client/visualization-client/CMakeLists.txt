@@ -40,12 +40,12 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR_DIR}/proto)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR_DIR}/src)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR_DIR}/src/Dummy)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR_DIR}/src/dummy)
 include_directories(${Protobuf_INCLUDE_DIRS})
 
 set(PROJECT_SOURCES
-		src/Dummy/DummyDevicePublisher.h
-		src/Dummy/DummyDevicePublisher.cpp
+		src/dummy/DummyDevicePublisher.h
+		src/dummy/DummyDevicePublisher.cpp
         src/Controller.h
         src/Controller.cpp
         src/DeviceData.h
