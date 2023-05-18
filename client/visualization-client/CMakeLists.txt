@@ -14,7 +14,7 @@ include( ../../cmake/DAMNFindCppZmq.cmake   )
 include( ../../cmake/DAMNFindProtobuf.cmake )
 
 file(GLOB HDRS "src/*.h" "src/dummy/*.h")
-file(GLOB SRCS "src/*.cpp" "src/dummy/*.cpp")
+file(GLOB SRCS "src/*.cpp" "src/*.qrc" "src/dummy/*.cpp")
 
 set(PROJECT_SOURCES ${HDRS})
 list(APPEND PROJECT_SOURCES ${SRCS})
