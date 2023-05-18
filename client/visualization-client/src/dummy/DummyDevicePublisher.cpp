@@ -27,8 +27,9 @@ static T generateRandomIntegerNumber(T min, T max)
     return dist(mt);
 }
 
-DummyDevicePublisher::DummyDevicePublisher(zmq::context_t& context)
-	: m_context(context)
+DummyDevicePublisher::DummyDevicePublisher(DummyDetails details, zmq::context_t& context)
+	: m_context (context)
+    , m_details (details)
 {
 }
 
@@ -39,13 +40,7 @@ void DummyDevicePublisher::run(std::stop_token stoken)
     // FIXME: hardcoded address
     m_socket = std::make_unique<socket_t>("tcp://127.0.0.1:5555");
 
-    constexpr std::size_t kSampleNumber{ 3 };
-    const std::array<std::string, kSampleNumber> kSampleSources{ "WS_VI_01", "WS_VI_02", "WS_VI_03" };
-    const std::array<std::string, kSampleNumber> kSampleUsers{ "Mario Rossi", "Paolo Bianchi", "Vincent Stork" };
-    const std::array<std::string, kSampleNumber> kSampleDetails{"Training", "Data processing", "Compiling" };
-    const std::array<Packet::PacketType, kSampleNumber - 1> kSampleType { Packet::PacketType::Packet_PacketType_REGISTRATION,  Packet::PacketType::Packet_PacketType_DISCONNECTION };
-
-    if (not m_socket->init<BindPolicy>(m_context, zmq::socket_type::pub)) {
+    if (not m_socket->init<ConnectPolicy>(m_context, zmq::socket_type::pub)) {
         spdlog::error("Failed to initialize socket!");
         return;
     } else 
@@ -59,11 +54,11 @@ void DummyDevicePublisher::run(std::stop_token stoken)
         }
 
         Packet pkt;
-        pkt.set_source(kSampleSources.at(generateRandomIntegerNumber<std::size_t>(0, kSampleNumber-1)));
-        pkt.set_timestamp( std::time( nullptr ) );
-        pkt.set_type(kSampleType.at(generateRandomIntegerNumber<std::size_t>(0, kSampleNumber - 2)));
-        pkt.set_userid(kSampleUsers.at(generateRandomIntegerNumber<std::size_t>(0, kSampleNumber-1)));
-        pkt.set_details(kSampleDetails.at(generateRandomIntegerNumber<std::size_t>(0, kSampleNumber-1)));
+        pkt.set_source(m_details.source);
+        pkt.set_timestamp(std::time(nullptr));
+        pkt.set_type(Packet::PacketType::Packet_PacketType_REGISTRATION);
+        pkt.set_userid(m_details.user);
+        pkt.set_details(m_details.details);
 
         if ( not m_socket->write( pkt ) )
             spdlog::error("Cannot write packet {}", pkt.DebugString() );

@@ -16,7 +16,7 @@ void DAMNListener::run(std::stop_token stoken)
     // FIXME: hardcoded address
     m_socket = std::make_unique<socket_t>( "tcp://127.0.0.1:5555" );
 
-    if ( not m_socket->init<ConnectPolicy>( m_context, zmq::socket_type::sub ) ) {
+    if ( not m_socket->init<BindPolicy>( m_context, zmq::socket_type::sub ) ) {
         spdlog::error( "Failed to initialize socket!" );
         return;
     } else
@@ -48,8 +48,6 @@ void DAMNListener::run(std::stop_token stoken)
 
         }
 
-        // Process events
-        QCoreApplication::processEvents();
     }
 }
 
