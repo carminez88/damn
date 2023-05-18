@@ -9,3 +9,4 @@ class DamnRecipe(ConanFile):
         self.requires("cppzmq/4.9.0")
         self.requires("protobuf/3.21.9")
         self.requires("spdlog/1.11.0")
+        self.requires("gtest/1.13.0")

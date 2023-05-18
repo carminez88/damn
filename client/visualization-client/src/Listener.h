@@ -5,6 +5,7 @@
 #include <qobjectdefs.h>
 
 #include "DeviceData.h"
+#include "ZMQUtils.h"
 #include "IStoppableRunner.h"
 #include "Packet.h"
 #include "Socket.h" // TODO: pimplare

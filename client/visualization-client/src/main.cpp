@@ -65,7 +65,6 @@ int main(int argc, char *argv[])
     QObject::connect( &listener,              &damn::DAMNListener::notifyDevice, 
                       Controller::instance(), &Controller::register_device_information, Qt::QueuedConnection );
 
-    //std::jthread listenerThread( [ &listener ](std::stop_token stoken) { listener.run( stoken ); } );
     DAMN_START_JTHREAD_RUNNER( listenerThread, listener )
 
     std::this_thread::sleep_for(2s);

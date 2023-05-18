@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Socket.h" 
-#include "../IStoppableRunner.h"
+#include "Socket.h" 
+#include "IStoppableRunner.h"
 
 namespace damn {
 
