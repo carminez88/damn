@@ -5,7 +5,7 @@
 namespace damn 
 {
 DAMNListener::DAMNListener(zmq::context_t& context)
-    : m_context ( context )
+    : m_context { context }
 {
 }
 
@@ -72,7 +72,6 @@ DeviceData::DeviceStatus packetType2DeviceStatus(Packet::PacketType packetType)
 
 std::optional<DeviceData> DAMNListener::packed2DeviceData(const Packet& packet)
 {
-    // @Francesco Lamberti: build pattern per DeviceData? ha senso? forse overkill
     DeviceData dd;
     dd.set_current_user(QString::fromStdString(packet.userid()));
     dd.set_identifier(QString::fromStdString(packet.source()));

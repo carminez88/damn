@@ -28,8 +28,8 @@ static T generateRandomIntegerNumber(T min, T max)
 }
 
 DummyDevicePublisher::DummyDevicePublisher(DummyDetails details, zmq::context_t& context)
-	: m_context (context)
-    , m_details (details)
+	: m_context {context}
+    , m_details {details}
 {
 }
 

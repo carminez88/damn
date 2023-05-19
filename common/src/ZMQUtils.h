@@ -1,5 +1,4 @@
-#ifndef ZMQUTILS_H
-#define ZMQUTILS_H
+#pragma once
 
 #include <zmq.hpp>
 
@@ -12,5 +11,3 @@ using zmq_context_t = zmq::context_t;
 using zmq_context_holder_t = std::reference_wrapper<zmq_context_t>;
 
 } // namespace damn
-
-#endif // ZMQUTILS_H

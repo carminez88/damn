@@ -1,5 +1,4 @@
-#ifndef SOCKET_H
-#define SOCKET_H
+#pragma once
 
 #include <spdlog/spdlog.h>
 #include "Packet.h"
@@ -71,5 +70,3 @@ private:
 };
 
 } // namespace damn
-
-#endif // SOCKET_H

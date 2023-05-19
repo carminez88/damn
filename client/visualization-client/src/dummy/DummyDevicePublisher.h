@@ -9,7 +9,6 @@ class DummyDevicePublisher : public IStoppableRunner
 {
 	using socket_t = DAMNSocket;
 	using socket_ptr_t = std::unique_ptr<socket_t>;
-
 public:
 	struct DummyDetails
 	{

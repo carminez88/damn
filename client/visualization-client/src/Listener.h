@@ -1,5 +1,4 @@
-#ifndef DAMNLISTENER_H
-#define DAMNLISTENER_H
+#pragma once
 
 #include <QObject>
 #include <qobjectdefs.h>
@@ -37,5 +36,3 @@ private:
 };
 
 } // namespace damn
-
-#endif // DAMNLISTENER_H

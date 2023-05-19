@@ -4,7 +4,7 @@
 namespace damn {
 
 DAMNSocket::DAMNSocket(std::string address)
-    : m_address ( std::move( address ) )
+    : m_address { std::move(address) }
 {}
 
 std::optional<Packet> DAMNSocket::read()
@@ -28,7 +28,7 @@ std::optional<Packet> DAMNSocket::read()
         spdlog::error( "Error while reading from 0MQ socket: {}", e.what() );
 	}
 
-	return std::nullopt;
+    return {};
 }
 
 bool DAMNSocket::write(Packet& packet)

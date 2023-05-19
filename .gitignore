@@ -37,3 +37,4 @@ build/*
 third_party/*
 common/proto/*.h
 common/proto/*.cc
+CMakeUserPresets.json
