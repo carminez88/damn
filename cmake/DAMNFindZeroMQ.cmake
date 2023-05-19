@@ -1,0 +1,1 @@
+find_package(ZeroMQ 4.3.4 REQUIRED)

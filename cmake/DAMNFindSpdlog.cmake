@@ -1,0 +1,1 @@
+find_package(spdlog 1.11.0 REQUIRED)

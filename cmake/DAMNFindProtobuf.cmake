@@ -1,0 +1,1 @@
+find_package(Protobuf 3.21.9 REQUIRED)
