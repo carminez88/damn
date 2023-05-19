@@ -56,7 +56,7 @@ void DummyDevicePublisher::run(std::stop_token stoken)
         Packet pkt;
         pkt.set_source(m_details.source);
         pkt.set_timestamp(std::time(nullptr));
-        pkt.set_type(Packet::PacketType::Packet_PacketType_REGISTRATION);
+        pkt.set_type(Packet::PacketType::Packet_PacketType_Registration);
         pkt.set_userid(m_details.user);
         pkt.set_details(m_details.details);
 

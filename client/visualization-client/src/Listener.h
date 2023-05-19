@@ -23,7 +23,7 @@ public:
 
     void run(std::stop_token stoken) override;
 
-Q_SIGNALS:
+signals:
     void notifyPacket(Packet);
     void notifyDevice(DeviceData);
 

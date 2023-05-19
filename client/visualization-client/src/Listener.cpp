@@ -41,10 +41,10 @@ void DAMNListener::run(std::stop_token stoken)
             spdlog::info( "Received packet {}", packet.DebugString() );
             
             if (auto dd = packed2DeviceData(packet); dd.has_value()) {
-                Q_EMIT notifyDevice(dd.value());
+                emit notifyDevice(dd.value());
             }
 
-            Q_EMIT notifyPacket( std::move( packet ) );
+            emit notifyPacket( std::move( packet ) );
 
         }
 
@@ -55,12 +55,12 @@ DeviceData::DeviceStatus packetType2DeviceStatus(Packet::PacketType packetType)
 {
     switch (packetType)
     {
-    case Packet::PacketType::Packet_PacketType_UNDEFINED:
-    case Packet::PacketType::Packet_PacketType_DISCONNECTION:
+    case Packet::PacketType::Packet_PacketType_Undefined:
+    case Packet::PacketType::Packet_PacketType_Disconnection:
         return DeviceData::DeviceStatus::Undefined;
 
-    case Packet::PacketType::Packet_PacketType_REGISTRATION:
-    case Packet::PacketType::Packet_PacketType_HEARTBEAT:
+    case Packet::PacketType::Packet_PacketType_Registration:
+    case Packet::PacketType::Packet_PacketType_Heartbeat:
         return DeviceData::DeviceStatus::Online;
 
     default:
