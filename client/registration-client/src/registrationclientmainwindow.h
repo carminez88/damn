@@ -2,7 +2,7 @@
 #define REGISTRATIONCLIENTMAINWINDOW_H
 
 #include <QMainWindow>
-#include "DeviceData.h"
+#include "RequestData.h"
 
 namespace Ui {
 class RegistrationClientMainWindow;
@@ -12,19 +12,23 @@ class RegistrationClientMainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit RegistrationClientMainWindow(QWidget *parent = nullptr);
+    explicit RegistrationClientMainWindow(QString id, QWidget *parent = nullptr);
     ~RegistrationClientMainWindow();
 
 signals:
-    void notifyRegistrationRequest(damn::DeviceData);
+    void notifyRequest(damn::RequestData);
 
 private:
-    void onRegisterBtnClicked();
+    damn::RequestData makeDeviceData(damn::RequestType type);
+
+    void cleanFields();
+
+    void toogleFields(bool active);
 
 private:
     Ui::RegistrationClientMainWindow *ui;
 };
 
-Q_DECLARE_METATYPE(damn::DeviceData);
+Q_DECLARE_METATYPE(damn::RequestData);
 
 #endif // REGISTRATIONCLIENTMAINWINDOW_H

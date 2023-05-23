@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QGuiApplication>
 #include <QApplication>
+#include <QCommandLineParser>
 #include <future>
 #include <thread>
 #include <chrono>
@@ -16,16 +17,30 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
+    QCommandLineParser parser;
+    QCommandLineOption identifier(QStringList() << "i" << "device-id",
+                                  QCoreApplication::translate("main", "Set the device identifier <id>"),
+                                  QCoreApplication::translate("main", "Device ID"));
+    parser.addOption(identifier);
+    parser.process(app);
+    const QString deviceID = parser.value(identifier);
+
+    if ( deviceID.isEmpty() ) {
+        spdlog::error( "Unable to read -i option. Please run the application with -i <identifier> option!" );
+        return -1;
+    }
 
     // Create Objects
     zmq::context_t ctx{ 1 };
 
-    damn::DAMNPublisher publisher { ctx };
+    damn::DAMNPublisher publisher { deviceID.toStdString(), ctx };
 
-    RegistrationClientMainWindow w;
+    RegistrationClientMainWindow w { deviceID };
     w.show();
 
-    QObject::connect( &w, &RegistrationClientMainWindow::notifyRegistrationRequest, &publisher, &damn::DAMNPublisher::onRegistrationRequest, Qt::QueuedConnection );
+    QObject::connect( &w,         &RegistrationClientMainWindow::notifyRequest,
+                      &publisher, &damn::DAMNPublisher::onRequest,
+                      Qt::QueuedConnection );
 
     DAMN_START_JTHREAD_RUNNER( pubThread, publisher )
 

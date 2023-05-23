@@ -5,9 +5,11 @@ using namespace std::chrono_literals;
 
 namespace damn {
 
-DAMNPublisher::DAMNPublisher(zmq::context_t& context)
-    : m_context { context }
+DAMNPublisher::DAMNPublisher(std::string id, zmq::context_t& context)
+    : m_id      { std::move( id ) }
+    , m_context { context }
 {
+    m_currentStatus.setUp( m_id );
 }
 
 void DAMNPublisher::run(std::stop_token stoken)
@@ -33,37 +35,77 @@ void DAMNPublisher::run(std::stop_token stoken)
 
         if ( not m_requests.empty() ) {
 
-            DeviceData request = m_requests.front();
+            RequestData request = m_requests.front();
 
-            auto pkt = deviceData2Packet( request );
-
-            if ( not m_socket->write( pkt ) )
-                spdlog::error("Cannot write packet {}", pkt.DebugString() );
-            else
-                spdlog::info("Sent packet {}", pkt.DebugString());
+            m_currentStatus.loadFrom( request );
 
             m_requests.pop();
         }
+
+        sendCurrentStatus();
 
         std::this_thread::sleep_for( 1s );
     }
 }
 
-void DAMNPublisher::onRegistrationRequest(DeviceData deviceData)
+void DAMNPublisher::onRequest(RequestData request)
 {
-    m_requests.emplace( deviceData );
+    m_requests.emplace( request );
 }
 
-Packet DAMNPublisher::deviceData2Packet(const DeviceData& deviceData)
+void DAMNPublisher::writePacket(Packet& packet)
+{
+    if ( not m_socket->write( packet ) )
+        spdlog::error("Cannot write packet {}", packet.DebugString() );
+    else
+        spdlog::info("Sent packet {}", packet.DebugString());
+}
+
+void DAMNPublisher::sendCurrentStatus()
+{
+    Packet pkt = m_currentStatus.toPacket();
+    writePacket( pkt );
+}
+
+void DAMNPublisher::Status::setUp(std::string identifier)
+{
+    id = std::move( identifier );
+    packetType = Packet::PacketType::Packet_PacketType_Heartbeat;
+    userID = "";
+    activityDetails = "";
+    requestType = RequestType::Undefined;
+}
+
+void DAMNPublisher::Status::loadFrom(const RequestData &request)
+{
+    switch ( request.requestType ) {
+    case RequestType::Registration:
+    {
+        userID = request.userID;
+        activityDetails = request.activityDetails;
+        requestType = request.requestType;
+        packetType = Packet::PacketType::Packet_PacketType_Registration;
+    }
+    break;
+
+    case RequestType::Undefined:
+    case RequestType::Disconnection:
+        setUp( id );
+        break;
+    }
+}
+
+Packet DAMNPublisher::Status::toPacket()
 {
     Packet pkt;
-    pkt.set_source( "WS-VI-01" ); // FIXME: hardcoded, read from cmd line
-    pkt.set_timestamp( std::time(nullptr) );
-    pkt.set_type(Packet::PacketType::Packet_PacketType_Registration);
-    pkt.set_userid( deviceData.userID );
-    pkt.set_details( deviceData.activityDetails );
+    pkt.set_source( id );
+    pkt.set_timestamp( std::time( nullptr ) );
+    pkt.set_type( packetType );
+    pkt.set_userid( userID );
+    pkt.set_details( activityDetails );
 
     return pkt;
 }
+
 
 } // namespace damn

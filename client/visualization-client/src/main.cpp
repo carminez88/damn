@@ -52,8 +52,8 @@ int main(int argc, char *argv[])
     engine.load(url);
 
     // Fill model with data
-    Controller::instance()->model()->add_device(
-        {"X24Abc003", "PC Lily", "", DeviceData::DeviceStatus::Online });
+//    Controller::instance()->model()->add_device(
+//        {"X24Abc003", "PC Lily", "", DeviceData::DeviceStatus::Online });
 
     // Create Objects
     zmq::context_t ctx{ 1 };
@@ -61,7 +61,8 @@ int main(int argc, char *argv[])
     damn::DAMNListener listener{ ctx };
 
     QObject::connect( &listener,              &damn::DAMNListener::notifyDevice, 
-                      Controller::instance(), &Controller::register_device_information, Qt::QueuedConnection );
+                      Controller::instance(), &Controller::register_device_information,
+                      Qt::QueuedConnection );
 
     DAMN_START_JTHREAD_RUNNER( listenerThread, listener )
 
