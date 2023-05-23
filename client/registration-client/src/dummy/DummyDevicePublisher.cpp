@@ -62,6 +62,8 @@ void DummyDevicePublisher::run(std::stop_token stoken)
 
         if ( not m_socket->write( pkt ) )
             spdlog::error("Cannot write packet {}", pkt.DebugString() );
+        else 
+            spdlog::info("Sent packet {}", pkt.DebugString());
 
         std::this_thread::sleep_for( 5s );
 	}

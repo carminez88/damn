@@ -4,6 +4,7 @@
 
 namespace damn 
 {
+
 DAMNListener::DAMNListener(zmq::context_t& context)
     : m_context { context }
 {
