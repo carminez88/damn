@@ -19,7 +19,12 @@ set(TARGET_NAME ${PROJECT_NAME})
 
 add_executable(${TARGET_NAME} ${PROJECT_SOURCES})
 
-target_link_libraries(${TARGET_NAME} PRIVATE ${ZeroMQ_LIBRARIES} ${cppzmq_LIBRARIES} ${CLI11_LIBRARIES} DAMN::Common )
+target_link_libraries(${TARGET_NAME} PRIVATE ${ZeroMQ_LIBRARIES}
+                                             ${cppzmq_LIBRARIES}
+                                             ${CLI11_LIBRARIES}
+                                             ${spdlog_LIBRARIES}
+                                             ${fmt_LIBRARIES}
+                                             DAMN::Common )
 
 target_include_directories( ${TARGET_NAME} PRIVATE ${ZeroMQ_INCLUDE_DIR}    )
 target_include_directories( ${TARGET_NAME} PRIVATE ${spdlog_INCLUDE_DIRS}   )
