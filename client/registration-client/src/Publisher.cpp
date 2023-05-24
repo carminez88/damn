@@ -30,17 +30,11 @@ void DAMNPublisher::run(std::stop_token stoken)
 
         if ( stoken.stop_requested() ) {
             spdlog::info( "Stop requested, so I'm closing..." );
+            disconnect();
             return;
         }
 
-        if ( not m_requests.empty() ) {
-
-            RequestData request = m_requests.front();
-
-            m_currentStatus.loadFrom( request );
-
-            m_requests.pop();
-        }
+        processRequest();
 
         sendCurrentStatus();
 
@@ -65,6 +59,28 @@ void DAMNPublisher::sendCurrentStatus()
 {
     Packet pkt = m_currentStatus.toPacket();
     writePacket( pkt );
+}
+
+void DAMNPublisher::disconnect()
+{
+    m_currentStatus.packetType = Packet::PacketType::Packet_PacketType_Disconnection;
+    m_currentStatus.userID = "";
+    m_currentStatus.activityDetails = "";
+    m_currentStatus.requestType = RequestType::Undefined;
+
+    sendCurrentStatus();
+}
+
+void DAMNPublisher::processRequest()
+{
+    if ( not m_requests.empty() ) {
+
+        RequestData request = m_requests.front();
+
+        m_currentStatus.loadFrom( request );
+
+        m_requests.pop();
+    }
 }
 
 void DAMNPublisher::Status::setUp(std::string identifier)

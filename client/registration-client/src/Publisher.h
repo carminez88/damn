@@ -44,6 +44,10 @@ private:
 
     void sendCurrentStatus();
 
+    void disconnect();
+
+    void processRequest();
+
 private:
     std::string m_id;
     zmq_context_holder_t m_context;
