@@ -13,8 +13,8 @@ include( ../../cmake/DAMNFindZeroMQ.cmake   )
 include( ../../cmake/DAMNFindCppZmq.cmake   )
 include( ../../cmake/DAMNFindProtobuf.cmake )
 
-file(GLOB HDRS "src/*.h" "src/dummy/*.h")
-file(GLOB SRCS "src/*.cpp" "src/*.qrc" "src/*.ui" "src/dummy/*.cpp")
+file(GLOB HDRS "src/*.h")
+file(GLOB SRCS "src/*.cpp" "src/*.qrc" "src/*.ui")
 
 set(PROJECT_SOURCES ${HDRS})
 list(APPEND PROJECT_SOURCES ${SRCS})
@@ -59,7 +59,6 @@ target_compile_definitions(${TARGET_NAME} PRIVATE ${spdlog_DEFINITIONS} ${fmt_DE
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/dummy)
 
 set_target_properties(${TARGET_NAME} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
