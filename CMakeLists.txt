@@ -4,4 +4,5 @@ project(Damn LANGUAGES CXX)
 
 add_subdirectory(common)
 add_subdirectory(client)
+add_subdirectory(broker)
 

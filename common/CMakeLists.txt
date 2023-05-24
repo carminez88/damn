@@ -23,17 +23,17 @@ add_library ( ${TARGET_NAME} STATIC ${HDRS} ${SRCS} )
 add_library ( DAMN::Common ALIAS ${TARGET_NAME}     )
 
 target_link_libraries(${TARGET_NAME} PRIVATE ${ZeroMQ_LIBRARIES} 
-											 ${spdlog_LIBRARIES} 
-											 ${fmt_LIBRARIES} 
-											 ${cppzmq_LIBRARIES} 
-											 ${protobuf_LIBRARIES} 
-											 DAMN::Proto)
+                                             ${spdlog_LIBRARIES}
+                                             ${fmt_LIBRARIES}
+                                             ${cppzmq_LIBRARIES}
+                                             ${protobuf_LIBRARIES}
+                                             DAMN::Proto)
 
 target_compile_definitions(${TARGET_NAME} PRIVATE ${spdlog_DEFINITIONS} 
-												  ${fmt_DEFINITIONS}
-												  ${protobuf_DEFINITIONS}
-												  ${ZeroMQ_DEFINITIONS}
-												  ${cppzmq_DEFINITIONS})
+                                                  ${fmt_DEFINITIONS}
+                                                  ${protobuf_DEFINITIONS}
+                                                  ${ZeroMQ_DEFINITIONS}
+                                                  ${cppzmq_DEFINITIONS})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}    )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}    )
