@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>DeviceDelegate.qml</file>
+        <file alias="tray_icon.png">damn_systray.png</file>
     </qresource>
 </RCC>

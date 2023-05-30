@@ -1,4 +1,5 @@
-#include <QGuiApplication>
+#include <QApplication>
+#include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <future>
@@ -16,7 +17,8 @@ using namespace std::chrono_literals;
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
+    app.setWindowIcon(QIcon{":/tray_icon.png"});
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));

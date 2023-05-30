@@ -4,7 +4,10 @@ import QtQuick.Layouts 1.10 // ColumnLayout
 import QtQuick.Controls 2.12 // Buttons
 import com.cppeverything.devicemonitor 1.0
 
+import Qt.labs.platform 1.1
+
 Window {
+    id: window
     width: 200
     height: 480
     visible: true
@@ -47,6 +50,17 @@ Window {
                 visible: parent.count == 0
                 anchors.fill: parent
             }
+        }
+    }
+
+    SystemTrayIcon {
+        visible: true
+        icon.source: "qrc:/tray_icon.png"
+
+        onActivated: {
+            window.show()
+            window.raise()
+            window.requestActivate()
         }
     }
 

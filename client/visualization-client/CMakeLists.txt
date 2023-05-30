@@ -43,6 +43,7 @@ target_link_libraries(${TARGET_NAME}
   PRIVATE
   Qt${QT_VERSION_MAJOR}::Core
   Qt${QT_VERSION_MAJOR}::Quick
+  Qt${QT_VERSION_MAJOR}::Widgets
   DAMN::Common
 )
 
