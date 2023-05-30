@@ -8,7 +8,6 @@ using namespace std::chrono_literals;
 
 #include "Controller.h"
 #include "Listener.h"
-#include "dummy/DummyDevicePublisher.h"
 #include "QDate"
 
 #define DAMN_START_JTHREAD_RUNNER( jthreadVar, runner ) std::jthread jthreadVar( [ &runner ](std::stop_token stoken) { runner.run( stoken ); } );
@@ -60,8 +59,8 @@ int main(int argc, char *argv[])
     zmq::context_t ctx{ 1 };
 
     damn::DAMNListener listener{ ctx };
-    damn::DummyDevicePublisher dummy1{ { "Vincent Stork", "WS-01", "Training" }, ctx };
-    damn::DummyDevicePublisher dummy2{ { "Mario Rossi", "WS-02", "Processing" }, ctx };
+//    damn::DummyDevicePublisher dummy1{ { "Vincent Stork", "WS-01", "Training" }, ctx };
+//    damn::DummyDevicePublisher dummy2{ { "Mario Rossi", "WS-02", "Processing" }, ctx };
 
     QObject::connect( &listener,              &damn::DAMNListener::notifyDevice, 
                       Controller::instance(), &Controller::register_device_information, Qt::QueuedConnection );
@@ -70,14 +69,14 @@ int main(int argc, char *argv[])
 
     std::this_thread::sleep_for(2s);
 
-    DAMN_START_JTHREAD_RUNNER( dummyThread1, dummy1 )
-    DAMN_START_JTHREAD_RUNNER( dummyThread2, dummy2 )
+//    DAMN_START_JTHREAD_RUNNER( dummyThread1, dummy1 )
+//    DAMN_START_JTHREAD_RUNNER( dummyThread2, dummy2 )
 
     auto ret = app.exec();
 
     DAMN_STOP_JTHREAD_RUNNER( listenerThread )
-    DAMN_STOP_JTHREAD_RUNNER( dummyThread1 )
-    DAMN_STOP_JTHREAD_RUNNER( dummyThread2 )
+//    DAMN_STOP_JTHREAD_RUNNER( dummyThread1 )
+//    DAMN_STOP_JTHREAD_RUNNER( dummyThread2 )
 
     return ret;
 }

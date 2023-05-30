@@ -4,4 +4,4 @@
 #include <ctime>
 #include <optional>
 
-#include "proto/packet.pb.h"
+#include "packet.pb.h"
