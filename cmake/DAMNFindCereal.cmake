@@ -1,0 +1,1 @@
+find_package(cereal 1.3.2 REQUIRED)
