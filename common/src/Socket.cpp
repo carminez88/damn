@@ -14,11 +14,11 @@ std::optional<Packet> DAMNSocket::read()
 
 		zmq::message_t zmsg;
 
-		if ( auto ret = m_zsocket->recv( zmsg ); ret.has_value() ) {
+		if ( auto ret = m_zsocket->recv( zmsg ); ret ) {
 
             auto pkt = unpack<Packet>(std::string(static_cast<char*>(zmsg.data()), zmsg.size()));
 
-            if ( pkt.has_value() )
+            if ( pkt )
                 return std::move( pkt.value() );
 
             spdlog::error( "Error while deserializing 0MQ message!" );

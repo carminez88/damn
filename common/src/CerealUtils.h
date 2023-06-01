@@ -1,5 +1,6 @@
 #pragma once
 
+#include <spdlog/spdlog.h>
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/string.hpp>
 #include <sstream>
@@ -16,13 +17,13 @@ inline static std::optional<std::string> pack(const Object& obj)
 
 		oarchive(obj);
 
-		return std::make_optional( ss.str() );
+		return ss.str();
 
-	} catch (const std::exception&) {
-
+	} catch (const std::exception& e) {
+		spdlog::error( "Impossible to pack object:", e.what() );
 	}
 
-	return std::nullopt;
+	return {};
 }
 
 template <typename Object>
@@ -38,11 +39,11 @@ inline static std::optional<Object> unpack(const std::string& str)
 
 		return std::make_optional(obj);
 
-	} catch (const std::exception&) {
-
+	} catch (const std::exception& e) {
+		spdlog::error("Impossible to unpack object:", e.what());
 	}
 
-	return std::nullopt;
+	return {};
 }
 
 } // namespace damn

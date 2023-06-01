@@ -8,9 +8,9 @@ namespace damn {
 	
 enum class PacketType : uint8_t {
 	Undefined = 0,
-	Registration = 1,
-	Heartbeat = 2,
-	Disconnection = 3,
+	Registration,
+	Heartbeat,
+	Disconnection,
 };
 
 struct Packet 
