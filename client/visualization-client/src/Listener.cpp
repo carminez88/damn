@@ -39,7 +39,7 @@ void DAMNListener::run(std::stop_token stoken)
 
             auto packet = std::move( pktRet.value() );
 
-            spdlog::info( "Received packet {}", packet.DebugString() );
+            spdlog::debug( "Received packet {}", packet.toString() );
             
             if (auto dd = packed2DeviceData(packet); dd.has_value()) {
                 emit notifyDevice(dd.value());
@@ -52,16 +52,16 @@ void DAMNListener::run(std::stop_token stoken)
     }
 }
 
-DeviceData::DeviceStatus packetType2DeviceStatus(Packet::PacketType packetType)
+DeviceData::DeviceStatus packetType2DeviceStatus(PacketType packetType)
 {
     switch (packetType)
     {
-    case Packet::PacketType::Packet_PacketType_Undefined:
-    case Packet::PacketType::Packet_PacketType_Disconnection:
+    case PacketType::Undefined:
+    case PacketType::Disconnection:
         return DeviceData::DeviceStatus::Undefined;
 
-    case Packet::PacketType::Packet_PacketType_Registration:
-    case Packet::PacketType::Packet_PacketType_Heartbeat:
+    case PacketType::Registration:
+    case PacketType::Heartbeat:
         return DeviceData::DeviceStatus::Online;
 
     default:
@@ -74,10 +74,10 @@ DeviceData::DeviceStatus packetType2DeviceStatus(Packet::PacketType packetType)
 std::optional<DeviceData> DAMNListener::packed2DeviceData(const Packet& packet)
 {
     DeviceData dd;
-    dd.set_current_user(QString::fromStdString(packet.userid()));
-    dd.set_identifier(QString::fromStdString(packet.source()));
-    dd.set_status(packetType2DeviceStatus(packet.type()));
-    dd.set_name(QString::fromStdString(packet.source()));
+    dd.set_current_user(QString::fromStdString(packet.userId));
+    dd.set_identifier(QString::fromStdString(packet.sourceId));
+    dd.set_status(packetType2DeviceStatus(packet.type));
+    dd.set_name(QString::fromStdString(packet.sourceId));
     return std::make_optional(dd);
 }
 

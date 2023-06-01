@@ -1,4 +1,5 @@
 #include <spdlog/spdlog.h>
+#include "CerealUtils.h"
 #include "Socket.h"
 
 namespace damn {
@@ -13,13 +14,12 @@ std::optional<Packet> DAMNSocket::read()
 
 		zmq::message_t zmsg;
 
-		if ( auto ret = m_zsocket->recv( zmsg ); ret.has_value() ) {
+		if ( auto ret = m_zsocket->recv( zmsg ); ret ) {
 
-            Packet pkt;
-            const bool parseSuccessfull = pkt.ParseFromString( std::string( static_cast<char*>( zmsg.data() ), zmsg.size() ) );
+            auto pkt = unpack<Packet>(std::string(static_cast<char*>(zmsg.data()), zmsg.size()));
 
-            if ( parseSuccessfull )
-                return std::move( pkt );
+            if ( pkt )
+                return std::move( pkt.value() );
 
             spdlog::error( "Error while deserializing 0MQ message!" );
 		}
@@ -33,14 +33,13 @@ std::optional<Packet> DAMNSocket::read()
 
 bool DAMNSocket::write(Packet& packet)
 {
-    std::string buffer;
-
-    if ( not packet.SerializeToString( &buffer ) ) {
+    if (auto buffer = pack<Packet>(packet); buffer.has_value()) {
         spdlog::error( "Cannot serialize message!" );
         return false;
-    }
+    } else 
+        return write( buffer.value() );
 
-    return write( buffer );
+    return false;
 }
 
 bool DAMNSocket::write(const std::string& buffer)
