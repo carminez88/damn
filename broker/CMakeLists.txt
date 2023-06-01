@@ -8,7 +8,6 @@ include( ../cmake/DAMNFindSpdlog.cmake     )
 include( ../cmake/DAMNFindFmt.cmake        )
 include( ../cmake/DAMNFindZeroMQ.cmake     )
 include( ../cmake/DAMNFindCppZmq.cmake     )
-include( ../cmake/DAMNFindProtobuf.cmake   )
 include( ../cmake/DAMNFindCLI11.cmake      )
 
 file(GLOB HDRS "src/*.h")
@@ -21,32 +20,42 @@ set(TARGET_NAME ${PROJECT_NAME})
 
 add_executable(${TARGET_NAME} ${PROJECT_SOURCES})
 
-target_link_libraries(${TARGET_NAME} PRIVATE ${ZeroMQ_LIBRARIES}
-                                             ${cppzmq_LIBRARIES}
-                                             ${CLI11_LIBRARIES}
-                                             ${spdlog_LIBRARIES}
-                                             ${fmt_LIBRARIES}
-                                             DAMN::Common )
+target_link_libraries(${TARGET_NAME}
+  PRIVATE
+  ${ZeroMQ_LIBRARIES}
+  ${cppzmq_LIBRARIES}
+  ${CLI11_LIBRARIES}
+  ${spdlog_LIBRARIES}
+  ${fmt_LIBRARIES}
+  DAMN::Common)
 
-target_include_directories( ${TARGET_NAME} PRIVATE ${ZeroMQ_INCLUDE_DIR}    )
-target_include_directories( ${TARGET_NAME} PRIVATE ${spdlog_INCLUDE_DIRS}   )
-target_include_directories( ${TARGET_NAME} PRIVATE ${cppzmq_INCLUDE_DIRS}   )
-target_include_directories( ${TARGET_NAME} PRIVATE ${protobuf_INCLUDE_DIRS} )
-target_include_directories( ${TARGET_NAME} PRIVATE ${fmt_INCLUDE_DIRS}      )
-target_include_directories( ${TARGET_NAME} PRIVATE ${CLI11_INCLUDE_DIRS}    )
-target_include_directories( ${TARGET_NAME} PRIVATE ../common/src            )
-target_include_directories( ${TARGET_NAME} PRIVATE ../common/               )
+target_include_directories(${TARGET_NAME}
+  PRIVATE
+  ${ZeroMQ_INCLUDE_DIR}
+  ${spdlog_INCLUDE_DIRS}
+  ${cppzmq_INCLUDE_DIRS}
+  ${protobuf_INCLUDE_DIRS}
+  ${fmt_INCLUDE_DIRS}
+  ${CLI11_INCLUDE_DIRS}
+  ../common/src
+  ../common/)
 
 if(MSVC)
     target_link_options(${TARGET_NAME} PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
 endif()
 
-target_compile_definitions(${TARGET_NAME} PRIVATE ${spdlog_DEFINITIONS} ${fmt_DEFINITIONS} ${CLI11_DEFINITIONS})
+target_compile_definitions(${TARGET_NAME}
+  PRIVATE
+  ${spdlog_DEFINITIONS}
+  ${fmt_DEFINITIONS}
+  ${CLI11_DEFINITIONS})
 												  
 include_directories( ${CMAKE_CURRENT_BINARY_DIR}     )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}     )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 
-set_target_properties(${TARGET_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
+set_target_properties(${TARGET_NAME}
+  PROPERTIES
+  WIN32_EXECUTABLE TRUE)
 
 install(TARGETS ${TARGET_NAME} BUNDLE DESTINATION . LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

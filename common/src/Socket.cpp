@@ -16,7 +16,7 @@ std::optional<Packet> DAMNSocket::read()
 
 		if ( auto ret = m_zsocket->recv( zmsg ); ret ) {
 
-            auto pkt = unpack<Packet>(std::string(static_cast<char*>(zmsg.data()), zmsg.size()));
+            auto pkt = unpack<Packet>( message2string( zmsg ) );
 
             if ( pkt )
                 return std::move( pkt.value() );
@@ -33,22 +33,19 @@ std::optional<Packet> DAMNSocket::read()
 
 bool DAMNSocket::write(Packet& packet)
 {
-    if (auto buffer = pack<Packet>(packet); buffer.has_value()) {
-        spdlog::error( "Cannot serialize message!" );
-        return false;
-    } else 
+    if ( auto buffer = pack<Packet>(packet); buffer ) {
         return write( buffer.value() );
+    }
+
+    spdlog::error( "Cannot serialize message!" );
 
     return false;
 }
 
 bool DAMNSocket::write(const std::string& buffer)
-{
-    const auto dataLength = buffer.length();
+{    
+    zmq::message_t zmsg = string2message( buffer );
 
-    zmq::message_t zmsg( dataLength );
-
-    std::memcpy( zmsg.data(), buffer.data(), dataLength );
     auto sendRet = m_zsocket->send( std::move( zmsg ), zmq::send_flags::dontwait );
 
     return sendRet.value_or( 0 ) == buffer.size();

@@ -13,6 +13,22 @@ using zmq_socket_type_t = zmq::socket_type;
 using zmq_context_t = zmq::context_t;
 using zmq_context_holder_t = std::reference_wrapper<zmq_context_t>;
 
+inline static std::string message2string(zmq::message_t& msg)
+{
+    return std::string( static_cast<char*>( msg.data() ), msg.size() );
+}
+
+inline static zmq::message_t string2message(const std::string& string)
+{
+    const auto dataLength = string.length();
+
+    zmq::message_t zmsg( dataLength );
+
+    std::memcpy( zmsg.data(), string.data(), dataLength );
+
+    return zmsg;
+}
+
 struct SocketOperator
 {
     virtual zmq_socket_t apply() = 0;
