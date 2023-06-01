@@ -3,7 +3,8 @@
 
 // Use unary operator+ to cast strongly typed enum to the underlying type for switch/case comparison
 template<typename E>
-constexpr typename std::underlying_type<E>::type operator+(E e)
+constexpr typename std::underlying_type_t<E> operator+(E e)
 {
-    return static_cast<typename std::underlying_type<E>::type>(e);
+	return static_cast<typename std::underlying_type_t<E>>(e);
 }
+

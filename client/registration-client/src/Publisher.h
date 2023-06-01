@@ -23,7 +23,7 @@ class DAMNPublisher : public QObject,
     struct Status : public RequestData
     {
         std::string id;
-        Packet::PacketType packetType;
+        PacketType packetType;
 
         void setUp(std::string identifier);
 

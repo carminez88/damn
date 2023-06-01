@@ -50,9 +50,9 @@ void DAMNPublisher::onRequest(RequestData request)
 void DAMNPublisher::writePacket(Packet& packet)
 {
     if ( not m_socket->write( packet ) )
-        spdlog::error("Cannot write packet {}", packet.DebugString() );
+        spdlog::error("Cannot write packet {}", packet.toString() );
     else
-        spdlog::info("Sent packet {}", packet.DebugString());
+        spdlog::info("Sent packet {}", packet.toString());
 }
 
 void DAMNPublisher::sendCurrentStatus()
@@ -63,8 +63,8 @@ void DAMNPublisher::sendCurrentStatus()
 
 void DAMNPublisher::disconnect()
 {
-    m_currentStatus.packetType = Packet::PacketType::Packet_PacketType_Disconnection;
-    m_currentStatus.userID = "";
+    m_currentStatus.packetType = PacketType::Disconnection;
+    m_currentStatus.userId = "";
     m_currentStatus.activityDetails = "";
     m_currentStatus.requestType = RequestType::Undefined;
 
@@ -86,8 +86,8 @@ void DAMNPublisher::processRequest()
 void DAMNPublisher::Status::setUp(std::string identifier)
 {
     id = std::move( identifier );
-    packetType = Packet::PacketType::Packet_PacketType_Heartbeat;
-    userID = "";
+    packetType = PacketType::Heartbeat;
+    userId = "";
     activityDetails = "";
     requestType = RequestType::Undefined;
 }
@@ -97,10 +97,10 @@ void DAMNPublisher::Status::loadFrom(const RequestData &request)
     switch ( request.requestType ) {
     case RequestType::Registration:
     {
-        userID = request.userID;
+        userId = request.userId;
         activityDetails = request.activityDetails;
         requestType = request.requestType;
-        packetType = Packet::PacketType::Packet_PacketType_Registration;
+        packetType = PacketType::Registration;
     }
     break;
 
@@ -114,11 +114,11 @@ void DAMNPublisher::Status::loadFrom(const RequestData &request)
 Packet DAMNPublisher::Status::toPacket()
 {
     Packet pkt;
-    pkt.set_source( id );
-    pkt.set_timestamp( std::time( nullptr ) );
-    pkt.set_type( packetType );
-    pkt.set_userid( userID );
-    pkt.set_details( activityDetails );
+    pkt.sourceId = id;
+    pkt.timestamp = std::time( nullptr );
+    pkt.type = packetType;
+    pkt.userId = userId;
+    pkt.details = activityDetails;
 
     return pkt;
 }

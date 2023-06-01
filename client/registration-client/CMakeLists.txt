@@ -8,12 +8,12 @@ set(CMAKE_AUTORCC ON)
 
 include( ../../cmake/DAMNCommonOptions.cmake  )
 include( ../../cmake/DAMNCompileOptions.cmake )
-include( ../../cmake/DAMNFindQT.cmake         )
-include( ../../cmake/DAMNFindSpdlog.cmake     )
-include( ../../cmake/DAMNFindFmt.cmake        )
-include( ../../cmake/DAMNFindZeroMQ.cmake     )
-include( ../../cmake/DAMNFindCppZmq.cmake     )
-include( ../../cmake/DAMNFindProtobuf.cmake   )
+include( ../../cmake/DAMNFindQT.cmake       )
+include( ../../cmake/DAMNFindSpdlog.cmake   )
+include( ../../cmake/DAMNFindFmt.cmake      )
+include( ../../cmake/DAMNFindZeroMQ.cmake   )
+include( ../../cmake/DAMNFindCppZmq.cmake   )
+include( ../../cmake/DAMNFindCereal.cmake   )
 
 file(GLOB HDRS "src/*.h")
 file(GLOB SRCS "src/*.cpp" "src/*.qrc" "src/*.ui")
@@ -39,24 +39,33 @@ else()
     endif()
 endif()
 
-target_link_libraries(${TARGET_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core
-                                             Qt${QT_VERSION_MAJOR}::Quick
-                                             Qt${QT_VERSION_MAJOR}::Gui
-                                             Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(${TARGET_NAME} PRIVATE DAMN::Common )
+target_link_libraries(${TARGET_NAME}
+  PRIVATE
+  Qt${QT_VERSION_MAJOR}::Core
+  Qt${QT_VERSION_MAJOR}::Quick
+  Qt${QT_VERSION_MAJOR}::Gui
+  Qt${QT_VERSION_MAJOR}::Widgets
+  DAMN::Common)
+  
+target_include_directories(${TARGET_NAME}
+  PRIVATE
+  ${Qt5Core_INCLUDE_DIRS}
+  ${Qt5Widgets_INCLUDE_DIRS}
+  ${Qt5Gui_INCLUDE_DIRS}
+  ${ZeroMQ_INCLUDE_DIR}
+  ${spdlog_INCLUDE_DIRS}
+  ${cppzmq_INCLUDE_DIRS}
+  ${protobuf_INCLUDE_DIRS}
+  ${fmt_INCLUDE_DIRS}
+  ${cereal_INCLUDE_DIRS}
+  ../../common/src
+  ../../common/)
 
-target_include_directories( ${TARGET_NAME} PRIVATE ${Qt5Core_INCLUDE_DIRS}    )
-target_include_directories( ${TARGET_NAME} PRIVATE ${Qt5Widgets_INCLUDE_DIRS} )
-target_include_directories( ${TARGET_NAME} PRIVATE ${Qt5Gui_INCLUDE_DIRS}     )
-target_include_directories( ${TARGET_NAME} PRIVATE ${ZeroMQ_INCLUDE_DIR}      )
-target_include_directories( ${TARGET_NAME} PRIVATE ${spdlog_INCLUDE_DIRS}     )
-target_include_directories( ${TARGET_NAME} PRIVATE ${cppzmq_INCLUDE_DIRS}     )
-target_include_directories( ${TARGET_NAME} PRIVATE ${protobuf_INCLUDE_DIRS}   )
-target_include_directories( ${TARGET_NAME} PRIVATE ${fmt_INCLUDE_DIRS}        )
-target_include_directories( ${TARGET_NAME} PRIVATE ../../common/src           )
-target_include_directories( ${TARGET_NAME} PRIVATE ../../common/              )
-
-target_compile_definitions(${TARGET_NAME} PRIVATE ${spdlog_DEFINITIONS} ${fmt_DEFINITIONS})
+target_compile_definitions(${TARGET_NAME}
+  PRIVATE
+  ${spdlog_DEFINITIONS}
+  ${fmt_DEFINITIONS}
+  ${cereal_DEFINITIONS})
 												  
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
