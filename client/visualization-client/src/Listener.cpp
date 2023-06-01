@@ -73,10 +73,10 @@ DeviceData::DeviceStatus packetType2DeviceStatus(PacketType packetType)
 std::optional<DeviceData> DAMNListener::packed2DeviceData(const Packet& packet)
 {
     DeviceData dd;
-    dd.set_current_user(QString::fromStdString(packet.userID));
-    dd.set_identifier(QString::fromStdString(packet.sourceID));
+    dd.set_current_user(QString::fromStdString(packet.userId));
+    dd.set_identifier(QString::fromStdString(packet.sourceId));
     dd.set_status(packetType2DeviceStatus(packet.type));
-    dd.set_name(QString::fromStdString(packet.sourceID));
+    dd.set_name(QString::fromStdString(packet.sourceId));
     return std::make_optional(dd);
 }
 

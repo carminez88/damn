@@ -16,8 +16,8 @@ enum class PacketType : uint8_t {
 struct Packet 
 {
 	int64_t timestamp;
-	std::string sourceID;
-	std::string userID;
+	std::string sourceId;
+	std::string userId;
 	std::string details;
 	PacketType type { PacketType::Undefined };
 
@@ -27,8 +27,8 @@ struct Packet
 
 		ss << "\n";
 		ss << "[Timestamp] " << timestamp << "\n";
-		ss << "[Source ID] " << sourceID << "\n";
-		ss << "[User ID] " << userID << "\n";
+		ss << "[Source ID] " << sourceId << "\n";
+		ss << "[User ID] " << userId << "\n";
 		ss << "[Details] " << details << "\n";
 		ss << "[Packet type] " << +timestamp << "\n";
 
@@ -39,8 +39,8 @@ struct Packet
 	void save(Archive& ar) const
 	{
 		ar(timestamp);
-		ar(sourceID);
-		ar(userID);
+		ar(sourceId);
+		ar(userId);
 		ar(details);
 		ar(type);
 	}
@@ -49,8 +49,8 @@ struct Packet
 	void load(Archive& ar)
 	{
 		ar(timestamp);
-		ar(sourceID);
-		ar(userID);
+		ar(sourceId);
+		ar(userId);
 		ar(details);
 		ar(type);
 	}
