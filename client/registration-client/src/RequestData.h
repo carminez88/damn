@@ -14,7 +14,7 @@ enum class RequestType
 
 struct RequestData
 {
-    std::string userID;
+    std::string userId;
     std::string activityDetails;
     RequestType requestType;
 };

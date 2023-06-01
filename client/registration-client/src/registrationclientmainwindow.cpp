@@ -22,7 +22,7 @@ RegistrationClientMainWindow::~RegistrationClientMainWindow()
 damn::RequestData RegistrationClientMainWindow::makeDeviceData(damn::RequestType type)
 {
     damn::RequestData rd;
-    rd.userID = ui->userLineEdit->text().toStdString();
+    rd.userId = ui->userLineEdit->text().toStdString();
     rd.activityDetails = ui->activityLineEdit->text().toStdString();
     rd.requestType = type;
 

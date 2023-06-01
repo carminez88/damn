@@ -43,20 +43,25 @@ target_link_libraries(${TARGET_NAME}
   PRIVATE
   Qt${QT_VERSION_MAJOR}::Core
   Qt${QT_VERSION_MAJOR}::Quick
-  DAMN::Common
-)
+  DAMN::Common)
 
-target_include_directories( ${TARGET_NAME} PRIVATE ${Qt5Core_INCLUDE_DIRS}  )
-target_include_directories( ${TARGET_NAME} PRIVATE ${ZeroMQ_INCLUDE_DIR}    )
-target_include_directories( ${TARGET_NAME} PRIVATE ${spdlog_INCLUDE_DIRS}   )
-target_include_directories( ${TARGET_NAME} PRIVATE ${cppzmq_INCLUDE_DIRS}   )
-target_include_directories( ${TARGET_NAME} PRIVATE ${Protobuf_INCLUDE_DIRS} )
-target_include_directories( ${TARGET_NAME} PRIVATE ${fmt_INCLUDE_DIRS}      )
-target_include_directories( ${TARGET_NAME} PRIVATE ${cereal_INCLUDE_DIRS}   )
-target_include_directories( ${TARGET_NAME} PRIVATE ../../common/src         )
-target_include_directories( ${TARGET_NAME} PRIVATE ../../common/            )
+target_include_directories(${TARGET_NAME}
+  PRIVATE
+  ${Qt5Core_INCLUDE_DIRS}
+  ${ZeroMQ_INCLUDE_DIR}
+  ${spdlog_INCLUDE_DIRS}
+  ${cppzmq_INCLUDE_DIRS}
+  ${Protobuf_INCLUDE_DIRS}
+  ${fmt_INCLUDE_DIRS}
+  ${cereal_INCLUDE_DIRS}
+  ../../common/src
+  ../../common/)
 
-target_compile_definitions(${TARGET_NAME} PRIVATE ${spdlog_DEFINITIONS} ${fmt_DEFINITIONS} ${cereal_DEFINITIONS})
+target_compile_definitions(${TARGET_NAME}
+  PRIVATE
+  ${spdlog_DEFINITIONS}
+  ${fmt_DEFINITIONS}
+  ${cereal_DEFINITIONS})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
