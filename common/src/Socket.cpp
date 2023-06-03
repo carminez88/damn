@@ -4,8 +4,8 @@
 
 namespace damn {
 
-DAMNSocket::DAMNSocket(std::string address)
-    : m_address { std::move(address) }
+DAMNSocket::DAMNSocket(net_data_t netData)
+    : m_netData { netData }
 {}
 
 std::optional<Packet> DAMNSocket::read()
@@ -14,7 +14,7 @@ std::optional<Packet> DAMNSocket::read()
 
 		zmq::message_t zmsg;
 
-		if ( auto ret = m_zsocket->recv( zmsg ); ret ) {
+        if ( auto ret = m_zsocket.recv( zmsg ); ret ) {
 
             auto pkt = unpack<Packet>( message2string( zmsg ) );
 
@@ -46,7 +46,7 @@ bool DAMNSocket::write(const std::string& buffer)
 {    
     zmq::message_t zmsg = string2message( buffer );
 
-    auto sendRet = m_zsocket->send( std::move( zmsg ), zmq::send_flags::dontwait );
+    auto sendRet = m_zsocket.send( std::move( zmsg ), zmq::send_flags::dontwait );
 
     return sendRet.value_or( 0 ) == buffer.size();
 }

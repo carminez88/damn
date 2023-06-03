@@ -15,9 +15,9 @@ void DAMNListener::run(std::stop_token stoken)
     // Create ZMQ Socket on a SUB channel
     // Many publishers on different endpoints, one single subscriber
     // FIXME: hardcoded address
-    m_socket = std::make_unique<socket_t>( "tcp://127.0.0.1:5556" );
+    m_socket = std::make_unique<socket_t>( net_data_t{ "127.0.0.1", 5556 } );
 
-    if ( not m_socket->init<ConnectPolicy>( m_context, zmq::socket_type::sub ) ) {
+    if ( not m_socket->init<ConnectInitializer<TcpAddressFormatter>>( m_context, zmq::socket_type::sub ) ) {
         spdlog::error( "Failed to initialize socket!" );
         return;
     } else

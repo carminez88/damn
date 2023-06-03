@@ -3,6 +3,7 @@
 #include <zmq.hpp>
 #include <zmq_addon.hpp>
 #include <spdlog/spdlog.h>
+#include "NetData.h"
 
 namespace damn {
 
@@ -129,11 +130,11 @@ public:
 };
 
 template<typename InitializerPolicy>
-auto makeSocket(zmq_context_t& ctx, zmq_socket_type_t type, std::string_view address, std::optional<int32_t> port = std::nullopt)
+auto makeSocket(zmq_context_t& ctx, zmq_socket_type_t type, const net_data_t& netData)
 {
     SocketBaseCreator baseCreator { ctx, type };
 
-    InitializerPolicy initializer { address, std::move( port ), baseCreator };
+    InitializerPolicy initializer { netData.address, netData.port, baseCreator };
 
     // TODO: find a way to set options
 

@@ -14,11 +14,11 @@ public:
 
     void run();
 
-    static auto runBroker(Broker& broker);
+    [[nodiscard]] static auto runBroker(Broker& broker);
 
     static void waitedRunBroker(Broker& broker);
 
-    static auto runBroker(std::string ipAddress, zmq_context_t& ctx);
+    [[nodiscard]] static auto runBroker(std::string ipAddress, zmq_context_t& ctx);
 
     static void waitedRunBroker(std::string ipAddress, zmq_context_t& ctx);
 
