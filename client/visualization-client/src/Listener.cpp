@@ -8,7 +8,13 @@ namespace damn
 bool DAMNListener::createSocket()
 {
     // FIXME: hardcoded address
-    return createSocketImpl<ConnectInitializer<TcpAddressFormatter>>( net_data_t{ "127.0.0.1", 5556 }, zmq::socket_type::sub );
+    if ( createSocketImpl<ConnectInitializer<TcpAddressFormatter>>( net_data_t{ "127.0.0.1", 5556 }, zmq::socket_type::sub ) ) {
+        m_socket->setOption( zmq::sockopt::rcvtimeo, k_timeout );
+        m_socket->setOption( zmq::sockopt::subscribe, "" );
+        return true;
+    }
+
+    return false;
 }
 
 void DAMNListener::loopTask()

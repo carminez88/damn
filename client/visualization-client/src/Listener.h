@@ -27,6 +27,8 @@ signals:
 
 private:
     [[nodiscard]] static std::optional<DeviceData> packed2DeviceData(const Packet& packet);
+
+    const int32_t k_timeout = 10000; // NOTE: timeout a 10 [s]
 };
 
 } // namespace damn

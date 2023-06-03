@@ -102,6 +102,7 @@ public:
             socket.connect( address );
         }  catch (std::exception& e) {
             spdlog::error( "Error while connecting at address {}: {}", address, e.what() );
+            std::terminate();
         }
 
         return std::move( socket );
@@ -123,6 +124,7 @@ public:
             socket.bind( address );
         }  catch (std::exception& e) {
             spdlog::error( "Error while binding at address {}: {}", address, e.what() );
+            std::terminate();
         }
 
         return std::move( socket );

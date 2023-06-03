@@ -36,13 +36,18 @@ public:
 
     [[nodiscard]] bool write(const std::string& buffer);
 
+    template<typename OptionType, typename OptionValue>
+    void setOption(OptionType type, OptionValue value)
+    {
+        m_zsocket.set( type, value );
+    }
+
     // TODO: socket option setter
 
 private:
     net_data_t m_netData;
     zmq_socket_type_t m_zsocketType{ zmq_socket_type_t::req };
     zmq_socket_t m_zsocket;
-    const int32_t k_timeout = 10000; // NOTE: timeout a 10 [s]
 };
 
 } // namespace damn
