@@ -6,45 +6,30 @@ using namespace std::chrono_literals;
 namespace damn {
 
 DAMNPublisher::DAMNPublisher(std::string id, zmq::context_t& context)
-    : m_id      { std::move( id ) }
-    , m_context { context }
+    : ZMQLooper { context         }
+    , m_id      { std::move( id ) }
 {
     m_currentStatus.setUp( m_id );
-}
-
-void DAMNPublisher::run(std::stop_token stoken)
-{
-    // Create ZMQ Socket on a PUB channel
-    // Many publishers on different endpoints, one single subscriber
-    // FIXME: hardcoded address
-    m_socket = std::make_unique<socket_t>( net_data_t{ "127.0.0.1", 5555 } );
-
-    if ( not m_socket->init<ConnectInitializer<TcpAddressFormatter>>( m_context, zmq::socket_type::pub ) ) {
-        spdlog::error("Failed to initialize socket!");
-        return;
-    } else
-        spdlog::info("Socket initialized!");
-
-    // Main loop
-    while ( 1 ) {
-
-        if ( stoken.stop_requested() ) {
-            spdlog::info( "Stop requested, so I'm closing..." );
-            disconnect();
-            return;
-        }
-
-        processRequest();
-
-        sendCurrentStatus();
-
-        std::this_thread::sleep_for( 1s );
-    }
 }
 
 void DAMNPublisher::onRequest(RequestData request)
 {
     m_requests.emplace( request );
+}
+
+bool DAMNPublisher::createSocket()
+{
+    // FIXME: hardcoded address
+    return createSocketImpl<ConnectInitializer<TcpAddressFormatter>>( net_data_t{ "127.0.0.1", 5555 }, zmq::socket_type::pub );
+}
+
+void DAMNPublisher::loopTask()
+{
+    processRequest();
+
+    sendCurrentStatus();
+
+    std::this_thread::sleep_for( 1s );
 }
 
 void DAMNPublisher::writePacket(Packet& packet)

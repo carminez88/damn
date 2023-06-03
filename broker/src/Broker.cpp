@@ -15,9 +15,9 @@ void Broker::run()
     constexpr int32_t k_backendPort { 5556 };
 
     try {
-        auto frontend = makeSocket<BindInitializer<TcpAddressFormatter>>( m_ctx, zmq::socket_type::xsub, m_ipAddress, k_frontendPort );
-        auto backend = makeSocket<BindInitializer<TcpAddressFormatter>>( m_ctx, zmq::socket_type::xpub, m_ipAddress, k_backendPort );
-        auto control = makeSocket<ConnectInitializer<InprocAddressFormatter>>( m_ctx, zmq::socket_type::sub, "control" );
+        auto frontend = makeSocket<BindInitializer<TcpAddressFormatter>>( m_ctx, zmq::socket_type::xsub, { "*", k_frontendPort } );
+        auto backend = makeSocket<BindInitializer<TcpAddressFormatter>>( m_ctx, zmq::socket_type::xpub, { "*", k_backendPort } );
+        auto control = makeSocket<ConnectInitializer<InprocAddressFormatter>>( m_ctx, zmq::socket_type::sub, { "control" } );
         control.set( zmq::sockopt::subscribe, "" );
 
         spdlog::info( "Broker started!" );

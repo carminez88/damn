@@ -1,27 +1,25 @@
 #pragma once
 
 #include <QObject>
-#include <qobjectdefs.h>
 
 #include "DeviceData.h"
-#include "ZMQUtils.h"
-#include "IStoppableRunner.h"
 #include "Packet.h"
 #include "Socket.h" // TODO: pimplare
+#include "ZMQLooper.h"
 
 namespace damn {
 
 class DAMNListener : public QObject, 
-                     public IStoppableRunner
+                     public ZMQLooper
 {
     Q_OBJECT
-
-    using socket_t = DAMNSocket;
-    using socket_ptr_t = std::unique_ptr<socket_t>;
 public:
-    explicit DAMNListener(zmq::context_t& context);
+    using ZMQLooper::ZMQLooper;
 
-    void run(std::stop_token stoken) override;
+private:
+    [[nodiscard]] bool createSocket() override;
+
+    void loopTask() override;
 
 signals:
     void notifyPacket(Packet);
@@ -29,10 +27,6 @@ signals:
 
 private:
     [[nodiscard]] static std::optional<DeviceData> packed2DeviceData(const Packet& packet);
-
-private:
-    zmq_context_holder_t m_context;
-    socket_ptr_t m_socket { nullptr };
 };
 
 } // namespace damn

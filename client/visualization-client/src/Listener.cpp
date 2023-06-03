@@ -5,49 +5,29 @@
 namespace damn 
 {
 
-DAMNListener::DAMNListener(zmq::context_t& context)
-    : m_context { context }
+bool DAMNListener::createSocket()
 {
+    // FIXME: hardcoded address
+    return createSocketImpl<ConnectInitializer<TcpAddressFormatter>>( net_data_t{ "127.0.0.1", 5556 }, zmq::socket_type::sub );
 }
 
-void DAMNListener::run(std::stop_token stoken)
+void DAMNListener::loopTask()
 {
-    // Create ZMQ Socket on a SUB channel
-    // Many publishers on different endpoints, one single subscriber
-    // FIXME: hardcoded address
-    m_socket = std::make_unique<socket_t>( net_data_t{ "127.0.0.1", 5556 } );
+    // Listen on ZMQ socket with a timeout of X seconds
+    // If package is found, emit it
+    spdlog::info("Shhhh...I'm listening...");
 
-    if ( not m_socket->init<ConnectInitializer<TcpAddressFormatter>>( m_context, zmq::socket_type::sub ) ) {
-        spdlog::error( "Failed to initialize socket!" );
-        return;
-    } else
-        spdlog::info( "Socket initialized!" );
+    if ( auto pktRet = m_socket->read(); pktRet.has_value() ) {
 
-    // Main loop
-    while ( 1 ) {
+        auto packet = std::move( pktRet.value() );
 
-        if ( stoken.stop_requested() ) {
-            spdlog::info( "Stop requested, so I'm closing..." );
-            return;
+        spdlog::debug( "Received packet {}", packet.toString() );
+
+        if (auto dd = packed2DeviceData(packet); dd.has_value()) {
+            emit notifyDevice(dd.value());
         }
 
-        // Listen on ZMQ socket with a timeout of X seconds
-        // If package is found, emit it
-        spdlog::info("Shhhh...I'm listening...");
-
-        if ( auto pktRet = m_socket->read(); pktRet.has_value() ) {
-
-            auto packet = std::move( pktRet.value() );
-
-            spdlog::debug( "Received packet {}", packet.toString() );
-            
-            if (auto dd = packed2DeviceData(packet); dd.has_value()) {
-                emit notifyDevice(dd.value());
-            }
-
-            emit notifyPacket( std::move( packet ) );
-
-        }
+        emit notifyPacket( std::move( packet ) );
 
     }
 }
