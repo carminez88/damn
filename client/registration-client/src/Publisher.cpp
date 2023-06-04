@@ -5,9 +5,9 @@ using namespace std::chrono_literals;
 
 namespace damn {
 
-DAMNPublisher::DAMNPublisher(std::string id, zmq::context_t& context)
-    : ZMQLooper { context         }
-    , m_id      { std::move( id ) }
+DAMNPublisher::DAMNPublisher(std::string id, std::string address, zmq::context_t& context)
+    : ZMQLooper { std::move( address ), context }
+    , m_id      { std::move( id )               }
 {
     m_currentStatus.setUp( m_id );
 }
@@ -19,8 +19,8 @@ void DAMNPublisher::onRequest(RequestData request)
 
 bool DAMNPublisher::createSocket()
 {
-    // FIXME: hardcoded address
-    return createSocketImpl<ConnectInitializer<TcpAddressFormatter>>( net_data_t{ "127.0.0.1", 5555 }, zmq::socket_type::pub );
+    constexpr int32_t k_connectionPort { 5555 };
+    return createSocketImpl<ConnectInitializer<TcpAddressFormatter>>( net_data_t{ m_address, k_connectionPort }, zmq::socket_type::pub );
 }
 
 void DAMNPublisher::loopTask()
@@ -36,8 +36,8 @@ void DAMNPublisher::writePacket(Packet& packet)
 {
     if ( not m_socket->write( packet ) )
         spdlog::error("Cannot write packet {}", packet.toString() );
-    else
-        spdlog::info("Sent packet {}", packet.toString());
+//    else
+//        spdlog::info("Sent packet {}", packet.toString());
 }
 
 void DAMNPublisher::sendCurrentStatus()

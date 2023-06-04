@@ -9,7 +9,7 @@ namespace damn {
 class ZMQLooper : public Looper
 {
 public:
-    ZMQLooper(zmq_context_t& ctx);
+    ZMQLooper(std::string address, zmq_context_t& ctx);
 
     virtual ~ZMQLooper() override = default;
 
@@ -41,6 +41,7 @@ protected:
 
     zmq_context_holder_t m_context;
     socket_ptr_t m_socket { nullptr };
+    std::string m_address;
 };
 
 }

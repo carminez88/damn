@@ -5,7 +5,6 @@
 #include <queue>
 #include "Packet.h"
 #include "RequestData.h"
-#include "Socket.h" // TODO: pimplare
 #include "ZMQLooper.h"
 
 namespace damn {
@@ -15,7 +14,7 @@ class DAMNPublisher : public QObject,
 {
     Q_OBJECT
 public:
-    explicit DAMNPublisher(std::string id, zmq::context_t& context);
+    explicit DAMNPublisher(std::string id, std::string address, zmq::context_t& context);
 
     void onRequest(RequestData request);
 

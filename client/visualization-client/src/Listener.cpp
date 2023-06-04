@@ -7,8 +7,9 @@ namespace damn
 
 bool DAMNListener::createSocket()
 {
-    // FIXME: hardcoded address
-    if ( createSocketImpl<ConnectInitializer<TcpAddressFormatter>>( net_data_t{ "127.0.0.1", 5556 }, zmq::socket_type::sub ) ) {
+    constexpr int32_t k_connectionPort { 5556 };
+
+    if ( createSocketImpl<ConnectInitializer<TcpAddressFormatter>>( net_data_t{ m_address, k_connectionPort }, zmq::socket_type::sub ) ) {
         m_socket->setOption( zmq::sockopt::rcvtimeo, k_timeout );
         m_socket->setOption( zmq::sockopt::subscribe, "" );
         return true;
@@ -21,13 +22,13 @@ void DAMNListener::loopTask()
 {
     // Listen on ZMQ socket with a timeout of X seconds
     // If package is found, emit it
-    spdlog::info("Shhhh...I'm listening...");
+    //spdlog::info("Shhhh...I'm listening...");
 
     if ( auto pktRet = m_socket->read(); pktRet.has_value() ) {
 
         auto packet = std::move( pktRet.value() );
 
-        spdlog::debug( "Received packet {}", packet.toString() );
+        //spdlog::debug( "Received packet {}", packet.toString() );
 
         if (auto dd = packed2DeviceData(packet); dd.has_value()) {
             emit notifyDevice(dd.value());

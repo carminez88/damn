@@ -3,8 +3,9 @@
 
 namespace damn {
 
-ZMQLooper::ZMQLooper(zmq_context_t& ctx)
-    : m_context { ctx }
+ZMQLooper::ZMQLooper(std::string address, zmq_context_t& ctx)
+    : m_address { std::move( address ) }
+    , m_context { ctx                  }
 {
 }
 

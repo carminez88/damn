@@ -4,7 +4,6 @@
 
 #include "DeviceData.h"
 #include "Packet.h"
-#include "Socket.h" // TODO: pimplare
 #include "ZMQLooper.h"
 
 namespace damn {
