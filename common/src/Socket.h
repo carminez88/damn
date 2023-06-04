@@ -42,8 +42,6 @@ public:
         m_zsocket.set( type, value );
     }
 
-    // TODO: socket option setter
-
 private:
     net_data_t m_netData;
     zmq_socket_type_t m_zsocketType{ zmq_socket_type_t::req };
