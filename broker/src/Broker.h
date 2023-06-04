@@ -10,7 +10,7 @@ namespace damn {
 class Broker
 {
 public:
-    explicit Broker(std::string ipAddress, zmq_context_t& ctx);
+    explicit Broker(zmq_context_t& ctx);
 
     void run();
 
@@ -18,13 +18,12 @@ public:
 
     static void waitedRunBroker(Broker& broker);
 
-    [[nodiscard]] static auto runBroker(std::string ipAddress, zmq_context_t& ctx);
+    [[nodiscard]] static auto runBroker(zmq_context_t& ctx);
 
-    static void waitedRunBroker(std::string ipAddress, zmq_context_t& ctx);
+    static void waitedRunBroker(zmq_context_t& ctx);
 
 private:
     zmq_context_holder_t m_ctx;
-    std::string m_ipAddress;
 };
 
 } // namespace damn

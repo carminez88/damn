@@ -2,14 +2,13 @@
 
 namespace damn {
 
-Broker::Broker(std::string ipAddress, zmq_context_t &ctx)
+Broker::Broker(zmq_context_t &ctx)
     : m_ctx ( ctx )
-    , m_ipAddress ( std::move( ipAddress ) )
 {}
 
 void Broker::run()
 {
-    spdlog::info( "Starting broker, using IP address {}", m_ipAddress );
+    spdlog::info( "Starting broker..." );
 
     constexpr int32_t k_frontendPort { 5555 };
     constexpr int32_t k_backendPort { 5556 };
@@ -42,15 +41,15 @@ void Broker::waitedRunBroker(Broker &broker)
     runBroker( broker ).wait();
 }
 
-auto Broker::runBroker(std::string ipAddress, zmq_context_t &ctx)
+auto Broker::runBroker(zmq_context_t &ctx)
 {
-    Broker broker { ipAddress, ctx };
+    Broker broker { ctx };
     return runBroker( broker );
 }
 
-void Broker::waitedRunBroker(std::string ipAddress, zmq_context_t &ctx)
+void Broker::waitedRunBroker(zmq_context_t &ctx)
 {
-    Broker broker { ipAddress, ctx };
+    Broker broker { ctx };
     waitedRunBroker( broker );
 }
 

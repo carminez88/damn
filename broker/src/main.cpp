@@ -6,16 +6,16 @@
 std::optional<std::string> parseIPAddress(int32_t argc, char *argv[]);
 
 int32_t main(int32_t argc, char *argv[])
-{    
-    auto ipAddress = parseIPAddress( argc, argv );
+{
+//    auto ipAddress = parseIPAddress( argc, argv );
 
-    if ( not ipAddress.has_value() ) {
-        return -1;
-    }
+//    if ( not ipAddress.has_value() ) {
+//        return -1;
+//    }
 
     zmq::context_t ctx { 1 };
 
-    damn::Broker::waitedRunBroker( ipAddress.value(), ctx );
+    damn::Broker::waitedRunBroker( ctx );
 
     return 0;
 }
