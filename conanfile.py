@@ -8,5 +8,6 @@ class DamnRecipe(ConanFile):
         self.requires("zeromq/4.3.4")
         self.requires("cppzmq/4.9.0")
         self.requires("spdlog/1.11.0")
+        self.requires("cli11/2.3.2")
         self.requires("gtest/1.13.0")
         self.requires("cereal/1.3.2")
