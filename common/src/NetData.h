@@ -8,7 +8,7 @@ namespace damn {
 struct NetData
 {
     std::string address;
-    std::optional<int32_t> port { std::nullopt };
+    std::optional<int32_t> port {};
 };
 
 using net_data_t = NetData;

@@ -24,13 +24,13 @@ void DAMNListener::loopTask()
     // If package is found, emit it
     //spdlog::info("Shhhh...I'm listening...");
 
-    if ( auto pktRet = m_socket->read(); pktRet.has_value() ) {
+    if ( auto pktRet = m_socket->read(); pktRet ) {
 
         auto packet = std::move( pktRet.value() );
 
         //spdlog::debug( "Received packet {}", packet.toString() );
 
-        if (auto dd = packed2DeviceData(packet); dd.has_value()) {
+        if ( const auto dd = packed2DeviceData(packet); dd ) {
             emit notifyDevice(dd.value());
         }
 

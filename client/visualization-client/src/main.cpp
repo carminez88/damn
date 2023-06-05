@@ -27,12 +27,14 @@ int main(int argc, char *argv[])
     parser.addOption(serverAddressOption);
     parser.process(app);
 
-    QString serverAddress = parser.value(serverAddressOption);
-
-    if ( serverAddress.isEmpty() ) {
-        serverAddress = "127.0.0.1";
-        spdlog::error( "Unable to read -a option. I will be using the addrss {}.", serverAddress.toStdString() );
-    }
+    const auto serverAddress = [&]{
+        auto address = parser.value(serverAddressOption);
+        if ( address.isEmpty() ) {
+            address = "127.0.0.1";
+            spdlog::error( "Unable to read -a option. I will be using the addrss {}.", address.toStdString() );
+        }
+        return address;
+    }();
 
     // Create QML Application
     QQmlApplicationEngine engine;

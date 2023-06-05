@@ -3,7 +3,7 @@
 namespace damn {
 
 Broker::Broker(zmq_context_t &ctx)
-    : m_ctx ( ctx )
+    : m_ctx { ctx }
 {}
 
 void Broker::run()

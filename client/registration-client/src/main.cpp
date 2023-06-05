@@ -29,26 +29,28 @@ int main(int argc, char *argv[])
     parser.addOption(serverAddressOption);
     parser.process(app);
 
-    const QString deviceID = parser.value(deviceIdOption);
+    const auto deviceId = parser.value(deviceIdOption);
 
-    if ( deviceID.isEmpty() ) {
+    if ( deviceId.isEmpty() ) {
         spdlog::error( "Unable to read -i option. Please run the application with -i <identifier> option!" );
         return -1;
     }
 
-    QString serverAddress = parser.value(serverAddressOption);
-
-    if ( serverAddress.isEmpty() ) {
-        serverAddress = "127.0.0.1";
-        spdlog::error( "Unable to read -a option. I will be using the addrss {}.", serverAddress.toStdString() );
-    }
+    const auto serverAddress = [&]{
+        auto address = parser.value(serverAddressOption);
+        if ( address.isEmpty() ) {
+            address = "127.0.0.1";
+            spdlog::error( "Unable to read -a option. I will be using the addrss {}.", address.toStdString() );
+        }
+        return address;
+    }();
 
     // Create Objects
     zmq::context_t ctx{ 1 };
 
-    damn::DAMNPublisher publisher { deviceID.toStdString(), serverAddress.toStdString(), ctx };
+    damn::DAMNPublisher publisher { deviceId.toStdString(), serverAddress.toStdString(), ctx };
 
-    RegistrationClientMainWindow w { deviceID };
+    RegistrationClientMainWindow w { deviceId };
     w.show();
 
     QObject::connect( &w,         &RegistrationClientMainWindow::notifyRequest,

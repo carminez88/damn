@@ -56,7 +56,7 @@ To run the **VisualizationClient**:
 ./VisualizationClient -a <broker IP address>
 ```
 
-If no address is supplied, it will defaulted to 127.0.0.1.
+If no address is supplied, it will default to 127.0.0.1.
 
 To run the **RegistrationClient**:
 
@@ -64,7 +64,7 @@ To run the **RegistrationClient**:
 ./VisualizationClient -i <device identifier> -a <broker IP address>
 ```
 
-The parameter *-i <device identifier>* is mandatory. If no address is supplied, it will defaulted to 127.0.0.1.
+The parameter *-i <device identifier>* is mandatory. If no address is supplied, it will default to 127.0.0.1.
 
 
 ## License

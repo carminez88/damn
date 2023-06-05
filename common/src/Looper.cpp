@@ -12,7 +12,7 @@ void Looper::run(std::stop_token stoken)
         return;
     }
 
-    while ( 1 ) {
+    while (true) {
 
         if ( stoken.stop_requested() ) {
             spdlog::info( "Stop requested, so I'm closing..." );

@@ -54,8 +54,10 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR}     )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}     )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 
-set_target_properties(${TARGET_NAME}
-  PROPERTIES
-  WIN32_EXECUTABLE TRUE)
+if(WIN32)
+  set_target_properties(${TARGET_NAME}
+    PROPERTIES
+    WIN32_EXECUTABLE TRUE)
+endif()
 
 install(TARGETS ${TARGET_NAME} BUNDLE DESTINATION . LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

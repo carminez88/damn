@@ -42,7 +42,7 @@ void DAMNPublisher::writePacket(Packet& packet)
 
 void DAMNPublisher::sendCurrentStatus()
 {
-    Packet pkt = m_currentStatus.toPacket();
+    auto pkt = m_currentStatus.toPacket();
     writePacket( pkt );
 }
 
@@ -60,7 +60,7 @@ void DAMNPublisher::processRequest()
 {
     if ( not m_requests.empty() ) {
 
-        RequestData request = m_requests.front();
+        auto request = m_requests.front();
 
         m_currentStatus.loadFrom( request );
 
@@ -96,7 +96,7 @@ void DAMNPublisher::Status::loadFrom(const RequestData &request)
     }
 }
 
-Packet DAMNPublisher::Status::toPacket()
+Packet DAMNPublisher::Status::toPacket() const
 {
     Packet pkt;
     pkt.sourceId = id;

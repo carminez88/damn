@@ -43,7 +43,7 @@ private:
 
         void loadFrom(const RequestData& request);
 
-        [[nodiscard]] Packet toPacket();
+        [[nodiscard]] Packet toPacket() const;
     };
 
     std::string m_id;

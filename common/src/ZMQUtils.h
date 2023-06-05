@@ -118,7 +118,7 @@ public:
     zmq_socket_t apply() override
     {
         auto socket = m_operator.apply();
-        auto address = FormatPolicy::format( m_address, m_port.value_or( 0 ) );
+        const auto address = FormatPolicy::format( m_address, m_port.value_or( 0 ) );
 
         try {
             socket.bind( address );
