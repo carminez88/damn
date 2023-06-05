@@ -7,7 +7,7 @@ DeviceListModel::DeviceListModel(QObject *parent)
 
 void DeviceListModel::add_device(const DeviceData &data)
 {
-    auto const *iterator
+    auto const iterator
         = std::find_if(m_known_devices.cbegin(),
                        m_known_devices.cend(),
                        [data](auto const &device_data) {

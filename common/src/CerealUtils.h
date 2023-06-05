@@ -17,7 +17,7 @@ inline static std::optional<std::string> pack(const Object& obj)
 
 		oarchive(obj);
 
-		return ss.str();
+        return std::string{ ss.str() };
 
 	} catch (const std::exception& e) {
 		spdlog::error( "Impossible to pack object:", e.what() );
@@ -37,7 +37,7 @@ inline static std::optional<Object> unpack(const std::string& str)
 		Object obj;
 		iarchive(obj);
 
-		return std::make_optional(obj);
+        return std::make_optional( obj );
 
 	} catch (const std::exception& e) {
 		spdlog::error("Impossible to unpack object:", e.what());

@@ -2,6 +2,8 @@
 #include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QCommandLineParser>
+#include <QDate>
 #include <future>
 #include <thread>
 #include <chrono>
@@ -9,7 +11,6 @@ using namespace std::chrono_literals;
 
 #include "Controller.h"
 #include "Listener.h"
-#include "QDate"
 
 #define DAMN_START_JTHREAD_RUNNER( jthreadVar, runner ) std::jthread jthreadVar( [ &runner ](std::stop_token stoken) { runner.run( stoken ); } );
 #define DAMN_STOP_JTHREAD_RUNNER( jthreadVar ) jthreadVar.request_stop();
@@ -20,6 +21,24 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setWindowIcon(QIcon{":/tray_icon.png"});
 
+    // Parse command line args
+    QCommandLineParser parser;
+    QCommandLineOption serverAddressOption(QStringList() << "a" << "server-address",
+                                           QCoreApplication::translate("main", "Set the server address <address>"),
+                                           QCoreApplication::translate("main", "Server Address"));
+    parser.addOption(serverAddressOption);
+    parser.process(app);
+
+    const auto serverAddress = [&]{
+        auto address = parser.value(serverAddressOption);
+        if ( address.isEmpty() ) {
+            address = "127.0.0.1";
+            spdlog::error( "Unable to read -a option. I will be using the addrss {}.", address.toStdString() );
+        }
+        return address;
+    }();
+
+    // Create QML Application
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(
@@ -53,32 +72,20 @@ int main(int argc, char *argv[])
                                            "Exposed for enum utilization");
     engine.load(url);
 
-    // Fill model with data
-    Controller::instance()->model()->add_device(
-        {"X24Abc003", "PC Lily", "", DeviceData::DeviceStatus::Online });
-
     // Create Objects
     zmq::context_t ctx{ 1 };
 
-    damn::DAMNListener listener{ ctx };
-//    damn::DummyDevicePublisher dummy1{ { "Vincent Stork", "WS-01", "Training" }, ctx };
-//    damn::DummyDevicePublisher dummy2{ { "Mario Rossi", "WS-02", "Processing" }, ctx };
+    damn::DAMNListener listener{ serverAddress.toStdString(), ctx };
 
     QObject::connect( &listener,              &damn::DAMNListener::notifyDevice, 
-                      Controller::instance(), &Controller::register_device_information, Qt::QueuedConnection );
+                      Controller::instance(), &Controller::register_device_information,
+                      Qt::QueuedConnection );
 
     DAMN_START_JTHREAD_RUNNER( listenerThread, listener )
-
-    std::this_thread::sleep_for(2s);
-
-//    DAMN_START_JTHREAD_RUNNER( dummyThread1, dummy1 )
-//    DAMN_START_JTHREAD_RUNNER( dummyThread2, dummy2 )
 
     auto ret = app.exec();
 
     DAMN_STOP_JTHREAD_RUNNER( listenerThread )
-//    DAMN_STOP_JTHREAD_RUNNER( dummyThread1 )
-//    DAMN_STOP_JTHREAD_RUNNER( dummyThread2 )
 
     return ret;
 }
