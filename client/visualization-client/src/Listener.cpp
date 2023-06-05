@@ -65,6 +65,7 @@ std::optional<DeviceData> DAMNListener::packed2DeviceData(const Packet& packet)
     dd.set_identifier(QString::fromStdString(packet.sourceId));
     dd.set_status(packetType2DeviceStatus(packet.type));
     dd.set_name(QString::fromStdString(packet.sourceId));
+    dd.set_details(QString::fromStdString(packet.details));
     return std::make_optional(dd);
 }
 

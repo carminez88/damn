@@ -9,6 +9,7 @@ Rectangle {
 
     property string deviceName
     property string deviceState
+    property string deviceDetails
     property string connectedUser
 
     radius: 20
@@ -24,6 +25,10 @@ Rectangle {
                 text: "unreachable"
             }
             PropertyChanges {
+                target: detailsText
+                text: ""
+            }
+            PropertyChanges {
                 target: statusCircle
                 color: "grey"
                 border.color: "transparent"
@@ -35,6 +40,10 @@ Rectangle {
             PropertyChanges {
                 target: statusText
                 text: "Connecting..."
+            }
+            PropertyChanges {
+                target: detailsText
+                text: ""
             }
             PropertyChanges {
                 target: statusCircle
@@ -54,6 +63,10 @@ Rectangle {
                 text: "In use by " + root.connectedUser
             }
             PropertyChanges {
+                target: detailsText
+                text: "Details: " + root.deviceDetails
+            }
+            PropertyChanges {
                 target: statusCircle
                 color: "yellow"
                 border.color: "grey"
@@ -65,6 +78,10 @@ Rectangle {
             PropertyChanges {
                 target: statusText
                 text: "Available"
+            }
+            PropertyChanges {
+                target: detailsText
+                text: ""
             }
             PropertyChanges {
                 target: statusCircle
@@ -126,9 +143,7 @@ Rectangle {
 
     Text {
         id: statusText
-//        text: connectedUser !== "" ? "In use by " + connectedUser
-//                          : deviceState == DeviceData.Online ? "available"
-//                                                : "offline"
+
         horizontalAlignment: Text.AlignLeft
 
         anchors {
@@ -136,6 +151,20 @@ Rectangle {
             bottom: parent.bottom
             left: deviceIdText.left
             right: deviceIdText.right
+            rightMargin: root.spaceBetweenItems
+        }
+    }
+
+    Text {
+        id: detailsText
+
+        horizontalAlignment: Text.AlignLeft
+
+        anchors {
+            top: statusText.bottom
+            bottom: parent.bottom
+            left: statusText.left
+            right: statusText.right
             rightMargin: root.spaceBetweenItems
         }
     }

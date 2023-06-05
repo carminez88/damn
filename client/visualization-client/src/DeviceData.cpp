@@ -3,11 +3,13 @@
 DeviceData::DeviceData(const QString &identifier,
                        const QString &name,
                        const QString &user,
+                       const QString &details,
                        const DeviceStatus &status)
     : m_identifier{identifier}
     , m_name{name}
     , m_current_user{user}
     , m_status{status}
+    , m_details{details}
 {}
 
 QString DeviceData::identifier() const
@@ -56,4 +58,16 @@ void DeviceData::set_current_user(const QString &current_user)
     if (m_current_user == current_user)
         return;
     m_current_user = current_user;
+}
+
+QString DeviceData::details() const
+{
+    return m_details;
+}
+
+void DeviceData::set_details(const QString &details)
+{
+    if (m_details == details)
+        return;
+    m_details = details;
 }

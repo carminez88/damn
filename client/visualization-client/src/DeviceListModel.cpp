@@ -50,6 +50,8 @@ QVariant DeviceListModel::data(const QModelIndex &index, int role) const
         return +device_data.status();
     case +Roles::User:
         return device_data.current_user();
+    case +Roles::Details:
+        return device_data.details();
     default:
         return {};
     }
@@ -71,5 +73,6 @@ QHash<int, QByteArray> DeviceListModel::roleNames() const
     roles[+Roles::Name] = "name";
     roles[+Roles::Status] = "status";
     roles[+Roles::User] = "user";
+    roles[+Roles::Details] = "details";
     return roles;
 }
