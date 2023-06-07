@@ -16,7 +16,7 @@ void Looper::run(std::stop_token stoken)
 
         if ( stoken.stop_requested() ) {
             spdlog::info( "Stop requested, so I'm closing..." );
-            return;
+            break;
         }
 
         loopTask();

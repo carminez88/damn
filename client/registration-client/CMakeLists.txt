@@ -55,7 +55,6 @@ target_include_directories(${TARGET_NAME}
   ${ZeroMQ_INCLUDE_DIR}
   ${spdlog_INCLUDE_DIRS}
   ${cppzmq_INCLUDE_DIRS}
-  ${protobuf_INCLUDE_DIRS}
   ${fmt_INCLUDE_DIRS}
   ${cereal_INCLUDE_DIRS}
   ../../common/src

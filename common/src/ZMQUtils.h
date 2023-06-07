@@ -30,6 +30,22 @@ inline static zmq::message_t string2message(const std::string& string)
     return zmsg;
 }
 
+struct TcpAddressFormatter
+{
+    static std::string format(std::string_view address, int32_t port)
+    {
+        return fmt::format( "tcp://{}:{}", address, port );
+    }
+};
+
+struct InprocAddressFormatter
+{
+    static std::string format(std::string_view address, [[maybe_unused]]int32_t port)
+    {
+        return fmt::format( "inproc://{}", address );
+    }
+};
+
 struct SocketOperator
 {
     virtual zmq_socket_t apply() = 0;
@@ -69,22 +85,6 @@ protected:
     SocketOperator& m_operator;
     std::string m_address;
     std::optional<int32_t> m_port;
-};
-
-struct TcpAddressFormatter
-{
-    static std::string format(std::string_view address, int32_t port)
-    {
-        return fmt::format( "tcp://{}:{}", address, port );
-    }
-};
-
-struct InprocAddressFormatter
-{
-    static std::string format(std::string_view address, [[maybe_unused]]int32_t port)
-    {
-        return fmt::format( "inproc://{}", address );
-    }
 };
 
 template<typename FormatPolicy>
