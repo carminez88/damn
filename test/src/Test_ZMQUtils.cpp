@@ -5,6 +5,14 @@
 
 inline damn::zmq_context_t ctx { 1 };
 
+struct WrongFormatter
+{
+    static std::string format(std::string_view address, int32_t port)
+    {
+        return fmt::format( "{}:{}", address, port );
+    }
+};
+
 TEST(TestSimpleMessage, string2message2string)
 {
     const std::string str { "stork" };
@@ -34,42 +42,45 @@ TEST(TestSocketOperator, basicCreator)
     EXPECT_NE( socket.handle(), nullptr );
 }
 
+#define TEST_SOCKET_INITIALIZER(Initializer) \
+damn::SocketBaseCreator creator { ctx, zmq::socket_type::rep }; \
+Initializer<damn::InprocAddressFormatter> initializer { "stork", std::nullopt, creator };\
+auto socket = initializer.apply();\
+EXPECT_NE( socket.handle(), nullptr );
+
+#define TEST_SOCKET_INITIALIZER_DEATH(Initializer) \
+damn::SocketBaseCreator creator { ctx, zmq::socket_type::rep }; \
+Initializer<WrongFormatter> initializer { "stork", std::nullopt, creator }; \
+ASSERT_EXIT({ \
+    initializer.apply(); \
+    std::exit(0); \
+}, ::testing::ExitedWithCode(3), ".*");
+
 TEST(TestSocketOperator, connectInitializer)
 {
-    damn::SocketBaseCreator creator { ctx, zmq::socket_type::rep };
-    damn::ConnectInitializer<damn::InprocAddressFormatter> initializer { "stork", std::nullopt, creator };
-
-    ASSERT_EXIT({
-        auto socket = initializer.apply();
-        EXPECT_NE( socket.handle(), nullptr );
-        socket.close();
-
-        std::exit(0);
-    }, ::testing::ExitedWithCode(0), ".*");
-}
-
-TEST(TestSocketOperator, connectInitializerTerminateWithInvalidAddress)
-{
-    damn::SocketBaseCreator creator { ctx, zmq::socket_type::rep };
-    damn::ConnectInitializer<damn::TcpAddressFormatter> initializer { "*", 5555, creator };
-
-    ASSERT_EXIT({
-        initializer.apply();
-
-        std::exit(0);
-    }, ::testing::ExitedWithCode(3), ".*");
+    TEST_SOCKET_INITIALIZER(damn::ConnectInitializer)
 }
 
 TEST(TestSocketOperator, bindInitializer)
 {
-    damn::SocketBaseCreator creator { ctx, zmq::socket_type::rep };
-    damn::BindInitializer<damn::InprocAddressFormatter> initializer { "stork", std::nullopt, creator };
+    TEST_SOCKET_INITIALIZER(damn::BindInitializer)
+}
 
-    ASSERT_EXIT({
-        auto socket = initializer.apply();
-        EXPECT_NE( socket.handle(), nullptr );
-        socket.close();
+TEST(TestSocketOperator, connectInitializerTerminateWithInvalidAddress)
+{
+    TEST_SOCKET_INITIALIZER_DEATH(damn::ConnectInitializer)
+}
 
-        std::exit(0);
-    }, ::testing::ExitedWithCode(0), ".*");
+TEST(TestSocketOperator, bindInitializerTerminateWithInvalidAddress)
+{
+    TEST_SOCKET_INITIALIZER_DEATH(damn::BindInitializer)
+}
+
+TEST(TestMakeSocket, canCreate)
+{
+    auto pub = damn::makeSocket<damn::BindInitializer<damn::InprocAddressFormatter>>( ctx, zmq::socket_type::pub, { "test", 0 } );
+    auto sub = damn::makeSocket<damn::ConnectInitializer<damn::InprocAddressFormatter>>( ctx, zmq::socket_type::sub, { "test", 0 } );
+
+    EXPECT_NE( pub.handle(), nullptr );
+    EXPECT_NE( sub.handle(), nullptr );
 }
