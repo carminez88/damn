@@ -148,7 +148,6 @@ Rectangle {
 
         anchors {
             top: deviceIdText.bottom
-            bottom: parent.bottom
             left: deviceIdText.left
             right: deviceIdText.right
             rightMargin: root.spaceBetweenItems
