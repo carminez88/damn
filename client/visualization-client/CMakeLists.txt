@@ -43,7 +43,9 @@ target_link_libraries(${TARGET_NAME}
   PRIVATE
   Qt${QT_VERSION_MAJOR}::Core
   Qt${QT_VERSION_MAJOR}::Quick
-  DAMN::Common)
+  Qt${QT_VERSION_MAJOR}::Widgets
+  DAMN::Common
+)
 
 target_include_directories(${TARGET_NAME}
   PRIVATE
