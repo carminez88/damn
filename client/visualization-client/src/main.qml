@@ -35,6 +35,7 @@ Window {
             delegate: DeviceDelegate {
                 deviceName: model.name
                 deviceState: model.status
+                deviceDetails: model.details
                 connectedUser: model.user
                 height: 50
                 width: listView.width

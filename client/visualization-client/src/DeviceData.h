@@ -9,6 +9,7 @@ class DeviceData
   Q_PROPERTY(QString name READ name WRITE set_name)
   Q_PROPERTY(DeviceStatus status READ status WRITE set_status)
   Q_PROPERTY(QString current_user READ current_user WRITE set_current_user)
+  Q_PROPERTY(QString details READ details WRITE set_details)
     // clang-format on
 
 public:
@@ -25,6 +26,7 @@ public:
     DeviceData(QString const &identifier,
                QString const &name,
                QString const &user = {},
+               QString const &details = {},
                DeviceStatus const &status = DeviceStatus::Undefined);
 
     [[nodiscard]] QString identifier() const;
@@ -39,11 +41,15 @@ public:
     [[nodiscard]] QString current_user() const;
     void set_current_user(const QString &current_user);
 
+    [[nodiscard]] QString details() const;
+    void set_details(const QString &details);
+
 private:
     QString m_identifier;
     QString m_name;
     DeviceStatus m_status;
     QString m_current_user;
+    QString m_details;
 };
 
 Q_DECLARE_METATYPE(DeviceData);

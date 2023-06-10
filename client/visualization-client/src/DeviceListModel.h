@@ -10,7 +10,8 @@ public:
         DeviceId = Qt::UserRole + 1,
         Name,
         Status,
-        User
+        User,
+        Details,
     };
 
     DeviceListModel(QObject *parent = nullptr);
